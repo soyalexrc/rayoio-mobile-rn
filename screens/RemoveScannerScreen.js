@@ -10,9 +10,8 @@ import CustomSnackBar from "../components/CustomSnackBar";
 export default function RemoveScannerScreen({navigation, route}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [lastCode, setLastCode] = useState('');
   const [sound, setSound] = useState(null);
-  const {data, loading, addItem, removeItem, error} = useReadProduct()
+  const {data, loading, removeItem, error} = useReadProduct()
   const [animationLineHeight, setAnimationLineHeight] = useState(0)
   const [focusLineAnimation, setFocusLineAnimation] = useState(new Animated.Value(0),)
   const [snackbar, setSnackbar] = useState({
@@ -30,7 +29,7 @@ export default function RemoveScannerScreen({navigation, route}) {
           duration: 500,
           useNativeDriver: true
         }),
-        Animated.delay(2000),
+        Animated.delay(1500),
         Animated.timing(opacity, {
           toValue: 0,
           duration: 500,
@@ -50,9 +49,6 @@ export default function RemoveScannerScreen({navigation, route}) {
   const selectedClient = useSelector(state => state.clients.selectedClient);
   const loginData = useSelector(state => state.login.loginData);
 
-  // console.log(selectedSlot)
-  // console.log(selectedClient);
-
   async function playSound() {
     const {sound} = await Audio.Sound.createAsync(
       require('../assets/codebar-sound.mp3')
@@ -66,7 +62,6 @@ export default function RemoveScannerScreen({navigation, route}) {
   }
 
   const handleBarCodeScanned = async ({data}) => {
-    if (lastCode !== data) {
       setScanned(true);
       await playSound()
       await removeItem({
@@ -76,11 +71,9 @@ export default function RemoveScannerScreen({navigation, route}) {
         userMail: loginData.data[0].email,
         amount: 1,
       })
-    }
   };
 
   const scanProductManual = async (data) => {
-    if (lastCode !== data) {
       await playSound()
       await removeItem({
         code: data,
@@ -89,13 +82,10 @@ export default function RemoveScannerScreen({navigation, route}) {
         userMail: loginData.data[0].email,
         amount: 1,
       })
-      setLastCode(data);
-    }
   }
 
   useEffect(() => {
     if (data.status) {
-      console.log(data);
       setSnackbar({
         message: data.message,
         color: data.status === 201 ? 'green' : 'red',

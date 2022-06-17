@@ -26,10 +26,10 @@ export default function LoginScreen({ navigation }) {
   }
 
   useEffect(() => {
-    if (loginData.status !== 200) {
+    if (loginData.status !== 200 && loginData.message) {
       setError(true)
       setModalMessage(loginData.message);
-    } else {
+    } else if (loginData.status === 200) {
       navigation.navigate('Root');
     }
   }, [loginData])

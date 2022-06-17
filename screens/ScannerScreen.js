@@ -30,7 +30,7 @@ export default function ScannerScreen({navigation, route}) {
           duration: 500,
           useNativeDriver: true
         }),
-        Animated.delay(2000),
+        Animated.delay(1500),
         Animated.timing(opacity, {
           toValue: 0,
           duration: 500,

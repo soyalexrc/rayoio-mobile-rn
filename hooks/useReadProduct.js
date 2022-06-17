@@ -31,5 +31,5 @@ export default function useReadProduct() {
     }
   }
 
-  return {data, addItem: (addBody) => addData(addBody), removeItem: (removeBody) => removeData(removeBody), loading, error};
+  return {data, cleanData: () => setData({}), addItem: (addBody) => addData(addBody), removeItem: (removeBody) => removeData(removeBody), loading, error};
 }
