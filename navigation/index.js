@@ -6,10 +6,12 @@ import HomeScreen from "../screens/HomeScreen";
 
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import RegisterNavigator from '../navigation/RegisterNavigator';
-import RemoveScreen from "../screens/RemoveScreen";
 import ScannerScreen from "../screens/ScannerScreen";
 import RemoveScannerScreen from "../screens/RemoveScannerScreen";
 import LoginScreen from "../screens/LoginScreen";
+import RemoveItemScreen from "../screens/RemoveItemScreen";
+import RemoveNavigation from "./RemoveNavigation";
+import HomeNavigation from "./HomeNavigation";
 
 const horizontalAnimation = {
   cardStyleInterpolator: ({ current, layouts }) => {
@@ -54,6 +56,13 @@ function RootNavigator() {
           name="Scanner"
           component={ScannerScreen}
         />
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name="RemoveScanner"
+          component={RemoveScannerScreen}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -84,7 +93,7 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="Home"
         screenOptions={{headerShown:false }}
-        component={HomeScreen}
+        component={HomeNavigation}
         options={({ navigation }) => ({
           headerShown: false,
           title: '',
@@ -111,10 +120,11 @@ function BottomTabNavigator() {
         component={RegisterNavigator}
         options={({ navigation }) => ({
           title: '',
+          headerShown: false,
           tabBarIcon: ({focused}) => (
             <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
               <Image
-                source={require('../assets/icons/home.png')}
+                source={require('../assets/icons/entry-icon.png')}
                 resizeMode='contain'
                 style={{
                   width: 25,
@@ -130,13 +140,14 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="Remove"
         screenOptions={{headerShown:false }}
-        component={RemoveScannerScreen}
+        component={RemoveNavigation}
         options={({ navigation }) => ({
           title: '',
+          headerShown: false,
           tabBarIcon: ({focused}) => (
             <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
               <Image
-                source={require('../assets/icons/home.png')}
+                source={require('../assets/icons/remove-icon.png')}
                 resizeMode='contain'
                 style={{
                   width: 25,
@@ -153,26 +164,6 @@ function BottomTabNavigator() {
   );
 }
 
-const CustomTabBarButton = ({children, onPress}) => (
-  <TouchableOpacity
-    style={{
-      top: -30,
-      justifyContent: 'center',
-      alignItems: 'center',
-      ...styles.shadow,
-    }}
-    onPress={onPress}
-  >
-    <View
-      style={{
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: 'red'
-      }}
-    >{children}</View>
-  </TouchableOpacity>
-)
 
 const styles = StyleSheet.create({
     shadow: {

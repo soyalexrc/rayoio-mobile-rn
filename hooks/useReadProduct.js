@@ -1,16 +1,22 @@
 import {useState} from 'react';
 import axios from "../utils/axios";
+import {useDispatch, useSelector} from "../redux/store";
+import {selectSlot} from '../redux/slices/slots'
 
 export default function useReadProduct() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch()
+  const selectedSlot = useSelector(state => state.slots.selectedSlot)
 
   async function addData(data) {
-    console.log(data);
     try {
       setLoading(true)
       const response = await axios.post('slots/addItemSlot', data)
+      if (response.data.status === 201) {
+        dispatch(selectSlot({ ...selectedSlot, amount: selectedSlot.amount + 1 }))
+      }
       setData(response.data)
       setLoading(false)
     } catch (err) {
@@ -19,10 +25,12 @@ export default function useReadProduct() {
     }
   }
   async function removeData(data) {
-    console.log(data);
     try {
       setLoading(true)
       const response = await axios.post('slots/substractItemSlot', data)
+      if (response.data.status === 201) {
+        dispatch(selectSlot({ ...selectedSlot, amount: selectedSlot.amount - 1 }))
+      }
       setData(response.data)
       setLoading(false)
     } catch (err) {
@@ -31,5 +39,5 @@ export default function useReadProduct() {
     }
   }
 
-  return {data, cleanData: () => setData({}), addItem: (addBody) => addData(addBody), removeItem: (removeBody) => removeData(removeBody), loading, error};
+  return {data, addItem: (addBody) => addData(addBody), removeItem: (removeBody) => removeData(removeBody), loading, error};
 }

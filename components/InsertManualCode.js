@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View, Modal, Alert, TextInput, Button, ActivityIndicator} from "react-native";
 import {useState} from 'react';
 
-export default function InsertManualCode({stopScan, scanProduct, loading, result,}) {
+export default function InsertManualCode({stopScan, scanProduct, loading}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [code, setCode] = useState('');
 
@@ -14,14 +14,6 @@ export default function InsertManualCode({stopScan, scanProduct, loading, result
   return (
     <>
       <TouchableOpacity style={styles.container} onPress={handlePress}>
-        {/*<View style={{*/}
-        {/*  width: 140,*/}
-        {/*  height: 1,*/}
-        {/*  borderBottomColor: '#59698A',*/}
-        {/*  marginHorizontal: 80,*/}
-        {/*  borderBottomWidth: 2,*/}
-        {/*  marginTop: 10,*/}
-        {/*}}></View>*/}
         <View style={styles.box}>
           <Image
             source={require('../assets/icons/home.png')}

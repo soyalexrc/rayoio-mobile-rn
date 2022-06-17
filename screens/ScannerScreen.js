@@ -22,30 +22,6 @@ export default function ScannerScreen({navigation, route}) {
   })
   const opacity = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    if (snackbar.message) {
-      Animated.sequence([
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true
-        }),
-        Animated.delay(1500),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true
-        }),
-      ]).start(() => {
-        setSnackbar({
-          color: '#fff',
-          message: '',
-          icon: ''
-        });
-      })
-    }
-  }, [snackbar])
-
   const selectedSlot = useSelector(state => state.slots.selectedSlot);
   const selectedClient = useSelector(state => state.clients.selectedClient);
   const loginData = useSelector(state => state.login.loginData);
@@ -94,21 +70,6 @@ export default function ScannerScreen({navigation, route}) {
     }
   }
 
-  useEffect(() => {
-    if (data.status) {
-      console.log(data);
-      setSnackbar({
-        message: data.message,
-        color: data.status === 201 ? 'green' : 'red',
-        icon: ''
-      })
-    }
-  }, [data])
-
-  useEffect(() => {
-    animateLine()
-  }, [])
-
   const animateLine = () => {
     Animated.sequence([
       Animated.timing(focusLineAnimation, {
@@ -123,6 +84,62 @@ export default function ScannerScreen({navigation, route}) {
       }),
     ]).start(animateLine)
   }
+
+  useEffect(() => {
+    let isMounted = true;
+    if (snackbar.message) {
+      if (isMounted) {
+        Animated.sequence([
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true
+          }),
+          Animated.delay(1500),
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true
+          }),
+        ]).start(() => {
+          setSnackbar({
+            color: '#fff',
+            message: '',
+            icon: ''
+          });
+        })
+      }
+      return () => {
+        isMounted = false
+      }
+    }
+  }, [snackbar])
+
+  useEffect(() => {
+    let isMounted = true;
+    if (data.status) {
+      if (isMounted) {
+        setSnackbar({
+          message: data.message,
+          color: data.status === 201 ? 'green' : 'red',
+          icon: ''
+        })
+      }
+    }
+    return () => {
+      isMounted = false;
+    }
+  }, [data])
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      animateLine()
+    }
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     (async () => {

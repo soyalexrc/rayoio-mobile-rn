@@ -30,7 +30,8 @@
     "react-native-web": "0.17.7",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
-    "rn-snackbar-component": "^0.0.5"
+    "rn-snackbar-component": "^0.0.5",
+    "expo-updates": "~0.13.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

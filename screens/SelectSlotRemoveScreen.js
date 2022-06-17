@@ -4,7 +4,21 @@ import {useDispatch, useSelector} from '../redux/store';
 import {useEffect} from 'react';
 import SlotBox from "../components/SlotBox";
 
-export default function SelectSlotScreen({navigation}) {
+const slots = [
+  {id: 1, title: 'Cliente'},
+  {id: 2, title: 'Cliente'},
+  {id: 3, title: 'Cliente'},
+  {id: 4, title: 'Cliente'},
+  {id: 5, title: 'Cliente'},
+  {id: 6, title: 'Cliente'},
+  {id: 7, title: 'Cliente'},
+  {id: 8, title: 'Cliente'},
+  {id: 9, title: 'Cliente'},
+  {id: 10, title: 'Cliente'},
+]
+
+
+export default function SelectSlotRemoveScreen({navigation}) {
   const dispatch = useDispatch();
   const {slots, isLoading} = useSelector(state => state.slots);
   const {loginData} = useSelector(state => state.login);
@@ -12,7 +26,7 @@ export default function SelectSlotScreen({navigation}) {
 
   const handleSelectSlot = (val) => {
     dispatch(selectSlot(val));
-    navigation.navigate('Scanner');
+    navigation.navigate('RemoveScanner');
   }
 
   useEffect(() => {
@@ -68,7 +82,22 @@ const styles = StyleSheet.create({
   },
   slots: {
     marginTop: 20,
-    height: 630
+    height: 550
+  },
+  button: {
+    padding: 30,
+    marginHorizontal: 20,
+    backgroundColor: '#fff',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderRadius: 15,
+    marginVertical: 10
   },
   backButton: {
     width: 35,
@@ -85,6 +114,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
 
 });

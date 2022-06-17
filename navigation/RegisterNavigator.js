@@ -1,7 +1,6 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import SelectClientScreen from '../screens/SelectClientScreen';
 import SelectSlotScreen from '../screens/SelectSlotScreen';
-import ScannerScreen from '../screens/ScannerScreen';
 import ScannerListScreen from "../screens/ScannerListScreen";
 
 export default function RegisterNavigator() {
@@ -12,7 +11,7 @@ export default function RegisterNavigator() {
         <Stack.Navigator
           initialRouteName="SelectClient"
           screenOptions={{
-            headerShown: false
+            headerShown: false,
           }}
         >
           <Stack.Screen

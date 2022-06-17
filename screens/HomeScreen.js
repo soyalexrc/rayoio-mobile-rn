@@ -1,11 +1,11 @@
-import {StyleSheet, Image, View, Text, Animated, PanResponder} from "react-native";
+import {StyleSheet, Image, View, Text, Animated, PanResponder, TouchableOpacity} from "react-native";
 import {useState} from "react";
 {/*import HomeChart from "../components/HomeChart";*/}
 import {useSelector} from '../redux/store';
 
 const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const [cardsPan, setCardsPan] = useState(new Animated.ValueXY());
   const [cardsStackedAnim, setCardsStackedAnim] = useState(new Animated.Value(0));
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -52,11 +52,12 @@ export default function HomeScreen() {
           resizeMode='contain'
           style={{width: 120, marginTop: 15}}
         />
-        <Image
-          source={require('../assets/icons/home.png')}
-          resizeMode='contain'
-          style={{width: 30,}}
-        />
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('SearchItems')}>
+          <Image
+            source={require('../assets/icons/search-icon.png')}
+            resizeMode='contain'
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.userInfoContainer}>
         <View style={styles.userInfo}>
@@ -69,11 +70,12 @@ export default function HomeScreen() {
             <Text style={{fontSize: 22, fontWeight: 'bold', letterSpacing: 1}}>Hola, Miguel!</Text>
             <Text style={{color: '#B0B3BA', fontSize: 18}}>Bienvenido de vuelta</Text>
           </View>
-          <Image
-            source={require('../assets/icons/home.png')}
-            resizeMode='contain'
-            style={{width: 25,}}
-          />
+          <TouchableOpacity>
+            <Image
+              source={require('../assets/icons/menu-icon.png')}
+              resizeMode='contain'
+            />
+          </TouchableOpacity>
         </View>
         <View>
           <Text style={{ fontSize: 22, color: '#311DEF', letterSpacing: 2, fontWeight: 'bold'}}>{loginData.data[0].nameWarehouse}</Text>
@@ -151,9 +153,9 @@ const styles = StyleSheet.create({
   logoRow: {
     flexDirection: 'row',
     justifyContent: "space-between",
-    paddingLeft: 20,
+    alignItems: 'center',
+    paddingHorizontal: 20,
     marginTop: 30,
-    paddingRight: 20,
   },
   userInfoContainer: {
     marginTop: 15,
@@ -201,5 +203,20 @@ const styles = StyleSheet.create({
   chartContainer: {
     width: 300,
     height: 400
-  }
+  },
+  backButton: {
+    backgroundColor: '#fff',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 10,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 });

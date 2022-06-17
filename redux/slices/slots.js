@@ -55,8 +55,8 @@ export function getSlotsByWarehouse(data) {
   };
 }
 
-export function selectSlot(client) {
+export function selectSlot(slot) {
   return (dispatch) => {
-    dispatch(slice.actions.setSelectedSlot(client))
+    dispatch(slice.actions.setSelectedSlot(slot))
   }
 }
