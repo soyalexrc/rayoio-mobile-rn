@@ -2,8 +2,8 @@ import {Image, StyleSheet, Text, TouchableOpacity, View, TextInput, ActivityIndi
 import useGetInventory from "../hooks/useGetInventory";
 import { useState } from 'react';
 import {useSelector} from "../redux/store";
-import ClientBox from "../components/ClientBox";
 import ItemBox from "../components/ItemBox";
+import HeaderNavigation from "../components/HeaderNavigation";
 
 export default function SearchItemScreen({navigation}) {
   const { data, error, getItemInventory, loading } = useGetInventory()
@@ -16,18 +16,7 @@ export default function SearchItemScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={{flex: 0.1}}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Image
-              source={require('../assets/icons/arrow-back.png')}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 0.9}}>
-          <Text style={{textAlign: 'center', fontSize: 30}}>Buscar Item</Text>
-        </View>
-      </View>
+      <HeaderNavigation navigation={navigation} title='Buscar Item' />
       <View style={styles.searchBox}>
         <View style={{flex: 0.9}}>
           <TextInput
@@ -86,29 +75,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    marginTop: 50,
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    alignItems: 'center'
-  },
   list: {
     height: 530
-  },
-  backButton: {
-    backgroundColor: '#fff',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 10,
-    borderRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center'
   },
   input: {
     height: 50,

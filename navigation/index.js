@@ -12,6 +12,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RemoveItemScreen from "../screens/RemoveItemScreen";
 import RemoveNavigation from "./RemoveNavigation";
 import HomeNavigation from "./HomeNavigation";
+import FulfillmentNavigation from "./FulfillmentNavigation";
 
 const horizontalAnimation = {
   cardStyleInterpolator: ({ current, layouts }) => {
@@ -133,6 +134,29 @@ function BottomTabNavigator() {
                 }}
               />
               <Text style={{ color: focused ? '#4354DD' : '#BCC3D0' }}>INGRESO</Text>
+            </View>
+          ),
+        })}
+      />
+      <BottomTab.Screen
+        name="Fulfillment"
+        screenOptions={{headerShown:false }}
+        component={FulfillmentNavigation}
+        options={({ navigation }) => ({
+          title: '',
+          headerShown: false,
+          tabBarIcon: ({focused}) => (
+            <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+              <Image
+                source={require('../assets/icons/fulfillment.png')}
+                resizeMode='contain'
+                style={{
+                  width: 25,
+                  height: 25,
+                  tintColor: focused ? '#4354DD' : '#BCC3D0'
+                }}
+              />
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0' }}>FULFILLMENT</Text>
             </View>
           ),
         })}

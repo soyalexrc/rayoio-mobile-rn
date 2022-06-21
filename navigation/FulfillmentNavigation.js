@@ -1,25 +1,27 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import SearchItemScreen from "../screens/SearchItemScreen";
+import FulfillmentListScreen from "../screens/FulfillmentListScreen";
+import OrderDetailScreen from "../screens/OrderDetailScreen";
 
-export default function HomeNavigation() {
+export default function FulfillmentNavigation() {
 
   const Stack = createNativeStackNavigator();
   return (
     <>
       <Stack.Navigator
-        initialRouteName="HomeScreen"
+        initialRouteName="FulfillmentList"
         screenOptions={{
           headerShown: false,
         }}
       >
         <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
+          name="FulfillmentList"
+          component={FulfillmentListScreen}
         />
         <Stack.Screen
-          name="SearchItems"
-          component={SearchItemScreen}
+          name="OrderDetail"
+          component={OrderDetailScreen}
         />
 
       </Stack.Navigator>

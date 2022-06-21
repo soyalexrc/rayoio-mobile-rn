@@ -3,7 +3,7 @@ import axios from "../utils/axios";
 import {useDispatch, useSelector} from "../redux/store";
 import {selectSlot} from '../redux/slices/slots'
 
-export default function useReadProduct() {
+export default function useInsertProductInSlot() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

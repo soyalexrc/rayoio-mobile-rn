@@ -20,7 +20,6 @@ export default function SlotBox(slot, fn) {
   )
 }
 
-
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',

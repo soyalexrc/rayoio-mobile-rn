@@ -3,7 +3,7 @@ import {StatusBar} from "expo-status-bar";
 
 export default function ItemBox(item) {
   return (
-    <TouchableOpacity style={styles.button} disabled>
+    <TouchableOpacity style={styles.button} >
       <Image
         style={{width: 50, height: 50}}
         resizeMode='contain'

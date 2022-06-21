@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Text, View, StyleSheet, Animated, Image, TouchableOpacity} from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Audio} from 'expo-av';
-import useReadProduct from "../hooks/useReadProduct";
+import useInsertProductInSlot from "../hooks/useInsertProductInSlot";
 import InsertManualCode from "../components/InsertManualCode";
 import {useSelector} from "../redux/store";
 import CustomSnackBar from "../components/CustomSnackBar";
@@ -12,7 +12,7 @@ export default function ScannerScreen({navigation, route}) {
   const [scanned, setScanned] = useState(false);
   const [lastCode, setLastCode] = useState('');
   const [sound, setSound] = useState(null);
-  const {data, loading, addItem, error} = useReadProduct()
+  const {data, loading, addItem, error} = useInsertProductInSlot()
   const [animationLineHeight, setAnimationLineHeight] = useState(0)
   const [focusLineAnimation, setFocusLineAnimation] = useState(new Animated.Value(0),)
   const [snackbar, setSnackbar] = useState({
@@ -247,6 +247,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
+    backgroundColor: '#000000'
   },
   overlay: {
     position: 'absolute',
