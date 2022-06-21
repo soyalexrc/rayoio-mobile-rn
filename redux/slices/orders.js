@@ -36,6 +36,9 @@ const slice = createSlice({
     },
     setAmountPicked(state, action) {
       state.currentAmountPicked =  state.currentAmountPicked + action.payload;
+    },
+    resetAmountPicked(state, action) {
+      state.currentAmountPicked = action.payload
     }
   },
 });
@@ -55,5 +58,11 @@ export function selectOrder(order) {
 export function addOrderPicked(order) {
   return (dispatch) => {
     dispatch(slice.actions.setAmountPicked(order))
+  }
+}
+
+export function resetAmount() {
+  return (dispatch) => {
+    dispatch(slice.actions.resetAmountPicked(0))
   }
 }

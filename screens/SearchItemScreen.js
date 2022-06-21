@@ -51,8 +51,8 @@ export default function SearchItemScreen({navigation}) {
       <View style={styles.list}>
         {
           loading &&
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color="#311DEF" />
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size='large' color='#311def' />
           </View>
         }
         {

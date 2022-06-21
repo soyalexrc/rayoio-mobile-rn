@@ -1,4 +1,4 @@
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {getClients, selectClient} from '../redux/slices/clients';
 import {useDispatch, useSelector} from '../redux/store';
 import {useEffect} from 'react';
@@ -27,7 +27,12 @@ export default function SelectClientScreen({navigation}) {
     <View style={styles.container}>
       <HeaderNavigation navigation={navigation} title='Seleccionar cliente' />
       <View style={styles.clients}>
-        {isLoading && <Text>loading...</Text>}
+        {
+          isLoading &&
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size='large' color='#311def' />
+          </View>
+        }
         {
           !isLoading && clients &&
           <FlatList

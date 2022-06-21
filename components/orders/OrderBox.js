@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {StatusBar} from "expo-status-bar";
+import orderStatus from '../../utils/orderStatus';
 
 export default function OrderBox(item, fn) {
   return (
@@ -26,9 +26,10 @@ export default function OrderBox(item, fn) {
             style={{
               padding: 5,
               borderRadius: 15,
-              backgroundColor: item.item.ff_statusOrder === '6273fa2fc78ce7931907bc64' ?
-                '#f25c22' : item.item.ff_statusOrder === '6273fa2fc78ce7931907bc65' ?
-                  '#f7ac06' : 'green'
+              backgroundColor: item.item.ff_statusOrder === orderStatus.assigned ?
+                '#f25c22' : item.item.ff_statusOrder === orderStatus.picking ?
+                  '#f7ac06' : item.item.ff_statusOrder === orderStatus.picked ?
+                    'green' : 'gray'
             }}
           >
             <Text style={{ color: '#fff' }}> {item.item.ff_nameStatus}</Text>

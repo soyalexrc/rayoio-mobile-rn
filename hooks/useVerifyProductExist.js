@@ -3,13 +3,14 @@ import axios from "../utils/axios";
 import {useDispatch, useSelector} from "../redux/store";
 import {selectOrder, addOrderPicked} from '../redux/slices/orders';
 import {cloneDeep} from 'lodash';
+import orderStatus from '../utils/orderStatus';
 
 export default function useVerifyProductExist() {
   const selectedOrder = useSelector(state => state.orders.selectedOrder)
+  const dispatch = useDispatch()
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const dispatch = useDispatch()
 
   async function consult(data) {
 
@@ -20,7 +21,7 @@ export default function useVerifyProductExist() {
         setLoading(true)
         const response = await axios.post('items/ItemByCode', data)
 
-        if (response.data.status === (200 || 204 )) {
+        if (response.data.status === (200 || 204)) {
           let statusChanged = false;
           let arrayMatch = cloneDeep(selectedOrder.items).map((i, index) => {
             let item = i;
@@ -38,7 +39,7 @@ export default function useVerifyProductExist() {
           if (statusChanged) {
             if (response.data.status === 200) {
               setData({message: 'Se pickeo el producto!', status: 200})
-            }  else if (response.data.status === 204) {
+            } else if (response.data.status === 204) {
               setData({message: 'Se pickeo el producto!, pero no existe en el inventario...', status: 404})
             }
             dispatch(selectOrder({...selectedOrder, items: arrayMatch}))
@@ -46,21 +47,6 @@ export default function useVerifyProductExist() {
           } else {
             setData({message: 'Este producto ya se encuentra completamente cargado en la orden.', status: 404})
           }
-
-          // setData({message: 'Se pickeo el producto!', status: 200})
-          // if (arrayMatch.length > 0) {
-          //   if (arrayMatch.filter(x => x.status === 'pending').length > 0) {
-          //     setElement({...arrayMatch[0], status: 'picking', amountpicked: 1})
-          //     const newArray = arrayMatch.splice(0, 1, element)
-          //     dispatch(selectOrder({...selectedOrder, items: newArray}))
-          //     setData({message: 'Se pickeo el producto!', status: 200})
-          //   } else {
-          //     setData({message: 'Este producto ya se encuentra completamente cargado en la orden.', status: 404})
-          //   }
-          //   setData({message: JSON.stringify(element), status: 200})
-          // } else {
-          //   setData({status: 500, message: 'Este producto no pertenece a esta orden!'})
-          // }
 
         } else {
           setData({status: 404, message: 'Este producto no existe en el inventario!'})
@@ -75,5 +61,32 @@ export default function useVerifyProductExist() {
     }
   }
 
-  return {data, consultItem: (addBody) => consult(addBody), loading, error};
+  async function changeStatusOrder(data) {
+    const copyOrder = cloneDeep(selectedOrder);
+    try {
+      setLoading(true)
+      const response = await axios.put('orders/byStatus', data);
+      if (response.data.status === 201) {
+        if (data.idStatus === orderStatus.assigned) {
+          dispatch(selectOrder({...copyOrder, ff_statusOrder: orderStatus.picking}))
+        }
+        if (data.idStatus === orderStatus.picking) {
+          dispatch(selectOrder({...copyOrder, ff_statusOrder: orderStatus.picked}))
+        }
+        setData({message: response.data.message, status: 200})
+      }
+      setLoading(false)
+    } catch (err) {
+      setError(err)
+      setLoading(false)
+    }
+  }
+
+  return {
+    data,
+    consultItem: (addBody) => consult(addBody),
+    changeStatus: (statusData) => changeStatusOrder(statusData),
+    loading,
+    error
+  };
 }

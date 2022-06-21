@@ -1,7 +1,10 @@
 import {StyleSheet, Image, View, Text, Animated, PanResponder, TouchableOpacity} from "react-native";
-import {useState} from "react";
-{/*import HomeChart from "../components/HomeChart";*/}
+import {useEffect, useState} from "react";
+
+{/*import HomeChart from "../components/HomeChart";*/
+}
 import {useSelector} from '../redux/store';
+import useGetOrders from "../hooks/useGetOrders";
 
 const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
 
@@ -9,10 +12,19 @@ export default function HomeScreen({navigation}) {
   const [cardsPan, setCardsPan] = useState(new Animated.ValueXY());
   const [cardsStackedAnim, setCardsStackedAnim] = useState(new Animated.Value(0));
   const [currentIndex, setCurrentIndex] = useState(0)
-  const { loginData } = useSelector(state => state.login);
+  const {loginData} = useSelector(state => state.login);
+  const {data, getOrders, loading} = useGetOrders()
 
-  console.log(loginData);
+  useEffect(() => {
+    return navigation.addListener('focus', (event) => {
+      getOrders({
+        userMail: loginData.data[0].email,
+        idWarehouse: loginData.data[0].idWarehouse
+      })
+    });
+  }, [navigation])
 
+  console.log(data);
   const cardsPanResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onStartShouldSetPanResponderCapture: () => true,
@@ -26,23 +38,27 @@ export default function HomeScreen({navigation}) {
     },
   })
 
-  const onPanResponderRelease = ( event, gestureState ) => {
+  const onPanResponderRelease = (event, gestureState) => {
     // bring the translationX back to 0
-    Animated.timing( cardsPan, {
-    toValue: 0,
-    duration: 300,
-  } ).start();
-  // will be used to interpolate values in each view
-  Animated.timing( cardsStackedAnim, {
-    toValue: 1,
-    duration: 300,
-  } ).start( () => {
-    // reset cardsStackedAnim's value to 0 when animation ends
-    setCardsStackedAnim( 0 );
-    // increment card position when animation ends
-    setCurrentIndex(prevState => prevState + 1)
-  } );
-};
+    Animated.timing(cardsPan, {
+      toValue: 0,
+      duration: 300,
+    }).start();
+    // will be used to interpolate values in each view
+    Animated.timing(cardsStackedAnim, {
+      toValue: 1,
+      duration: 300,
+    }).start(() => {
+      // reset cardsStackedAnim's value to 0 when animation ends
+      setCardsStackedAnim(0);
+      // increment card position when animation ends
+      setCurrentIndex(prevState => prevState + 1)
+    });
+  };
+
+  function getNameFromEmail(email) {
+    return email.split('@')[0]
+  }
 
   return (
     <View style={styles.container}>
@@ -67,7 +83,11 @@ export default function HomeScreen({navigation}) {
             style={{width: 40}}
           />
           <View style={{paddingLeft: 20, paddingRight: 20}}>
-            <Text style={{fontSize: 22, fontWeight: 'bold', letterSpacing: 1}}>Hola, Miguel!</Text>
+            <Text style={{
+              fontSize: 22,
+              fontWeight: 'bold',
+              letterSpacing: 1
+            }}>Hola, {getNameFromEmail(loginData.data[0].email)}!</Text>
             <Text style={{color: '#B0B3BA', fontSize: 18}}>Bienvenido de vuelta</Text>
           </View>
           <TouchableOpacity>
@@ -78,39 +98,44 @@ export default function HomeScreen({navigation}) {
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={{ fontSize: 22, color: '#311DEF', letterSpacing: 2, fontWeight: 'bold'}}>{loginData.data[0].nameWarehouse}</Text>
+          <Text style={{
+            fontSize: 22,
+            color: '#311DEF',
+            letterSpacing: 2,
+            fontWeight: 'bold'
+          }}>{loginData.data[0].nameWarehouse}</Text>
         </View>
       </View>
       <View style={styles.notificationsContainer}>
-          <View style={{
-            ...styles.notifications,
-            // width: 300, height: 150,
-            position: 'absolute',
-            zIndex: 1,
-            bottom: 40,
-            backgroundColor: colors[2], // Red
-            opacity: 0.3,
-            transform: [{scale: 0.80}],
-          }}>
-            <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
-            <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas 36 paquetes</Text>
-          </View>
-          <View style={{
-            ...styles.notifications,
-            // width: 300, height: 150,
-            position: 'absolute',
-            zIndex: 2,
-            bottom: 20,
-            backgroundColor: colors[1], // Green
-            opacity: 0.6,
-            transform: [{scale: 0.90}],
-          }}>
-            <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
-            <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas 36 paquetes</Text>
-          </View>
-          <Animated.View
-            { ...cardsPanResponder.panHandlers }
-            style={{
+        <View style={{
+          ...styles.notifications,
+          // width: 300, height: 150,
+          position: 'absolute',
+          zIndex: 1,
+          bottom: 40,
+          backgroundColor: colors[2], // Red
+          opacity: 0.3,
+          transform: [{scale: 0.80}],
+        }}>
+          <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
+          <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+        </View>
+        <View style={{
+          ...styles.notifications,
+          // width: 300, height: 150,
+          position: 'absolute',
+          zIndex: 2,
+          bottom: 20,
+          backgroundColor: colors[1], // Green
+          opacity: 0.6,
+          transform: [{scale: 0.90}],
+        }}>
+          <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
+          <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+        </View>
+        <Animated.View
+          {...cardsPanResponder.panHandlers}
+          style={{
             ...styles.notifications,
             // width: 300, height: 150,
             position: 'absolute',
@@ -119,23 +144,23 @@ export default function HomeScreen({navigation}) {
             backgroundColor: colors[0], // Blue
             opacity: 1,
             transform: [
-              { translateX: cardsPan.x },
-              { scale: 1.0 },
+              {translateX: cardsPan.x},
+              {scale: 1.0},
             ],
           }}>
-            <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
-            <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas 36 paquetes</Text>
-          </Animated.View>
+          <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
+          <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+        </Animated.View>
       </View>
       <View style={styles.payloadContainer}>
         <View style={styles.payload}>
           <View style={styles.payloadBox}>
-            <Text style={{ color: '#B0B3BA' }}>CARGA INGRESADA</Text>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>2 Bultos</Text>
+            <Text style={{color: '#B0B3BA'}}>CARGA INGRESADA</Text>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>2 Bultos</Text>
           </View>
           <View style={styles.payloadBox}>
-            <Text style={{ color: '#B0B3BA' }}>CARGA ENTREGADA</Text>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>0 Bultos</Text>
+            <Text style={{color: '#B0B3BA'}}>CARGA ENTREGADA</Text>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>0 Bultos</Text>
           </View>
         </View>
       </View>

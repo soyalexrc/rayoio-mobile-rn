@@ -4,7 +4,7 @@ import {StatusBar} from "expo-status-bar";
 export default function OrderItemBox({item, fn, index, length}) {
   return (
     <TouchableOpacity style={[styles.button, {marginBottom: index === length -1 ? 120 : 0}]} onPress={() => fn(item.item)}>
-      <View>
+      <View >
         {
           item.imageUrl  ?
             (
@@ -14,11 +14,15 @@ export default function OrderItemBox({item, fn, index, length}) {
                 source={{uri: item.imageUrl}}
               />
             ) : (
-              <Text>No image...</Text>
+              <Image
+                style={{width: 50, height: 50}}
+                resizeMode='contain'
+                source={require('../../assets/images/no-imagepng.png')}
+              />
             )
         }
       </View>
-      <View style={{marginHorizontal: 20}}>
+      <View style={{marginHorizontal: 20, width: '80%'}}>
         <Text style={{fontSize: 22, fontWeight: 'bold'}}>{item.itemName}</Text>
         <Text style={{fontSize: 16}}>Codigo: {item.code}</Text>
         <Text style={{fontSize: 16}}>Cantidad: {item.amount}</Text>
@@ -29,7 +33,7 @@ export default function OrderItemBox({item, fn, index, length}) {
               padding: 5,
               borderRadius: 15,
               backgroundColor: item.status === 'pending' ?
-                '#f25c22' : 'green'
+                'red' : 'green'
             }}
           >
             <Text style={{color: '#fff'}}> {item.status}</Text>

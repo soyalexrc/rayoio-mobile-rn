@@ -1,4 +1,4 @@
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {getSlotsByWarehouse, selectSlot} from '../redux/slices/slots';
 import {useDispatch, useSelector} from '../redux/store';
 import {useEffect} from 'react';
@@ -31,7 +31,12 @@ export default function SelectSlotRemoveScreen({navigation}) {
     <View style={styles.container}>
       <HeaderNavigation navigation={navigation} title='Seleccionar slot' />
       <View style={styles.slots}>
-        {isLoading && <Text>loading...</Text>}
+        {
+          isLoading &&
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size='large' color='#311def' />
+          </View>
+        }
         {
           !isLoading && slots &&
           <FlatList
