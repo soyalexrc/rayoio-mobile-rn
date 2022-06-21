@@ -2,14 +2,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from "../screens/HomeScreen";
 
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import RegisterNavigator from '../navigation/RegisterNavigator';
-import ScannerScreen from "../screens/ScannerScreen";
-import RemoveScannerScreen from "../screens/RemoveScannerScreen";
-import LoginScreen from "../screens/LoginScreen";
-import RemoveItemScreen from "../screens/RemoveItemScreen";
+import ScannerScreen from "../screens/entry/ScannerScreen";
+import RemoveScannerScreen from "../screens/exit/RemoveScannerScreen";
+import LoginScreen from "../screens/auth/LoginScreen";
 import RemoveNavigation from "./RemoveNavigation";
 import HomeNavigation from "./HomeNavigation";
 import FulfillmentNavigation from "./FulfillmentNavigation";
@@ -104,12 +102,12 @@ function BottomTabNavigator() {
                 source={require('../assets/icons/home.png')}
                 resizeMode='contain'
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: 20,
+                  height: 20,
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0' }}>HOME</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>HOME</Text>
             </View>
           ),
           // ...horizontalAnimation
@@ -128,12 +126,12 @@ function BottomTabNavigator() {
                 source={require('../assets/icons/entry-icon.png')}
                 resizeMode='contain'
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: 20,
+                  height: 20,
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0' }}>INGRESO</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>INGRESO</Text>
             </View>
           ),
         })}
@@ -151,12 +149,12 @@ function BottomTabNavigator() {
                 source={require('../assets/icons/fulfillment.png')}
                 resizeMode='contain'
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: 20,
+                  height: 20,
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0' }}>FULFILLMENT</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>FULFILLMENT</Text>
             </View>
           ),
         })}
@@ -174,12 +172,12 @@ function BottomTabNavigator() {
                 source={require('../assets/icons/remove-icon.png')}
                 resizeMode='contain'
                 style={{
-                  width: 25,
-                  height: 25,
+                  width: 20,
+                  height: 20,
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0' }}>REMOVER</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10 }}>REMOVER</Text>
             </View>
           ),
         })}

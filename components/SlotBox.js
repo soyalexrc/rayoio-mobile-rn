@@ -11,9 +11,9 @@ export default function SlotBox(slot, fn) {
         source={{uri: slot.item.imageUrl}}
       />
       <View style={{ marginHorizontal: 20 }}>
-        <Text style={{fontSize: 22, fontWeight: 'bold'}}>{slot.item.name}</Text>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{slot.item.name}</Text>
         {/*<Text style={{fontSize: 16}}>{slot.item.rut_customer}</Text>*/}
-        <Text style={{fontSize: 16}}>Items: {slot.item.amount}</Text>
+        <Text style={{fontSize: 12}}>Items: {slot.item.amount}</Text>
       </View>
 
     </TouchableOpacity>

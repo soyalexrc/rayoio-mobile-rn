@@ -6,20 +6,22 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  ActivityIndicator, Modal
+  ActivityIndicator,
+  Modal,
+  RefreshControl
 } from "react-native";
-import {useSelector} from "../redux/store";
-import HeaderNavigation from "../components/HeaderNavigation";
-import OrderDetailResume from "../components/orders/OrderDetailResume";
+import {useSelector} from "../../redux/store";
+import HeaderNavigation from "../../components/HeaderNavigation";
+import OrderDetailResume from "../../components/orders/OrderDetailResume";
 import {BarCodeScanner} from "expo-barcode-scanner";
 import {useEffect, useRef, useState} from "react";
 import {Audio} from "expo-av";
-import OrderItemBox from "../components/orders/OrderItemBox";
-import useVerifyProductExist from "../hooks/useVerifyProductExist";
-import orderStatus from "../utils/orderStatus";
-import {useDispatch} from "../redux/store";
-import {resetAmount} from '../redux/slices/orders';
-import useConsultSlots from "../hooks/useConsultSlots";
+import OrderItemBox from "../../components/orders/OrderItemBox";
+import useVerifyProductExist from "../../hooks/useVerifyProductExist";
+import orderStatus from "../../utils/orderStatus";
+import {useDispatch} from "../../redux/store";
+import {resetAmount} from '../../redux/slices/orders';
+import useConsultSlots from "../../hooks/useConsultSlots";
 
 export default function OrderDetailScreen({navigation}) {
   const {selectedOrder, currentAmountPicked} = useSelector(state => state.orders);
@@ -32,6 +34,7 @@ export default function OrderDetailScreen({navigation}) {
   const [metaDataModal, setMetaDataModal] = useState(false)
   const {data, consultItem, changeStatus, error, loading} = useVerifyProductExist()
   const {indicator, getSlotsOrder, orderSlotsData, orderSlotsError, orderSlotsLoading} = useConsultSlots()
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch()
   const [snackbar, setSnackbar] = useState({
     text: '',
@@ -43,7 +46,7 @@ export default function OrderDetailScreen({navigation}) {
 
   async function playSound() {
     const {sound} = await Audio.Sound.createAsync(
-      require('../assets/codebar-sound.mp3')
+      require('../../assets/codebar-sound.mp3')
     );
     setSound(sound);
     await sound.playAsync();
@@ -179,7 +182,7 @@ export default function OrderDetailScreen({navigation}) {
         !orderSlotsLoading && orderSlotsData && orderSlotsData.length > 0 &&
         <TouchableOpacity onPress={() => navigation.navigate('OrderDetailSlots', {idOrder: selectedOrder._id})} style={{ width: '100%', backgroundColor: indicator ? 'green' : 'yellow', padding: 10 }}>
           <Text style={{ color: indicator ? '#fff' : '#000', fontSize: 22, textAlign: 'center' }}>
-            {indicator ?  'STOCK DISPONIBLE' : 'STOCK NO DISPONIBLE'}
+            {indicator ?  'STOCK COMPLETO' : 'STOCK INCOMPLETO'}
           </Text>
         </TouchableOpacity>
       }
@@ -205,7 +208,9 @@ export default function OrderDetailScreen({navigation}) {
           </View>
         </View>
       }
-      <ScrollView>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={ () => getSlotsOrder({idOrder: selectedOrder._id})} />}
+      >
         {
           selectedOrder.ff_statusOrder === orderStatus.picking &&
           <View style={styles.scannerContainer}>
@@ -242,7 +247,7 @@ export default function OrderDetailScreen({navigation}) {
                       onPress={() => setScanned(false)}
                       style={styles.rescanIconContainer}>
                       <Image
-                        source={require('../assets/images/rescan.png')}
+                        source={require('../../assets/images/rescan.png')}
                         style={{width: 50, height: 50}}
                       />
                     </TouchableOpacity>
@@ -264,7 +269,7 @@ export default function OrderDetailScreen({navigation}) {
             paddingTop: 10
           }}>Contenido de la orden</Text>
           {
-            selectedOrder !== {} && selectedOrder.items.map((item, index) => (
+            selectedOrder && selectedOrder.items.length > 0 && selectedOrder.items.map((item, index) => (
               <OrderItemBox item={item} index={index} length={selectedOrder.items.length} key={item.SKU + index}
                             fn={handleTouch}/>
             ))

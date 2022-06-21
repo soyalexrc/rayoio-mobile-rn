@@ -23,20 +23,20 @@ export default function OrderDetailResume({item, fn}) {
           resizeMode='contain'
           source={{uri: item.urlImageClient}}
         />
-        <Text style={{ fontSize: 14, textAlign: 'center' }}>{item.nameClient}</Text>
+        <Text style={{ fontSize: 12, textAlign: 'center' }}>{item.nameClient}</Text>
       </View>
       <View style={{marginHorizontal: 20}}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{fontSize: 22, fontWeight: 'bold'}}>{item.ff_orderId}</Text>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.ff_orderId}</Text>
           <View style={{ backgroundColor: handleColorStatus(item.ff_statusOrder, 'color'), padding: 5,  borderRadius: 10 }}>
-            <Text style={{fontSize: 12, color: '#fff', fontWeight: 'bold'}}>{handleColorStatus(item.ff_statusOrder, 'text')}</Text>
+            <Text style={{fontSize: 10, color: '#fff', fontWeight: 'bold'}}>{handleColorStatus(item.ff_statusOrder, 'text')}</Text>
           </View>
         </View>
-        <Text style={{fontSize: 16}}>{item.dateCreatedOrder}</Text>
-        <Text style={{fontSize: 16}}>{item.task.name}</Text>
-        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.task.state} - {item.task.country}</Text>
+        <Text style={{fontSize: 12}}>{item.dateCreatedOrder}</Text>
+        <Text style={{fontSize: 12}}>{item.task.name}</Text>
+        <Text style={{fontSize: 12, fontWeight: 'bold'}}>{item.task.state} - {item.task.country}</Text>
         <TouchableOpacity style={styles.actionButton} onPress={fn}>
-          <Text style={{fontSize: 14, color: '#fff', textAlign: 'center'}}> Metadata</Text>
+          <Text style={{fontSize: 12, color: '#fff', textAlign: 'center'}}> Metadata</Text>
         </TouchableOpacity>
       </View>
 

@@ -11,6 +11,11 @@ export default function InsertManualCode({stopScan, scanProduct, loading}) {
     setCode('');
   }
 
+  const handleCodeScan = (code) => {
+    scanProduct(code)
+    setCode('');
+  }
+
   return (
     <>
       <TouchableOpacity style={styles.container} onPress={handlePress}>
@@ -18,12 +23,11 @@ export default function InsertManualCode({stopScan, scanProduct, loading}) {
           <Image
             source={require('../assets/icons/home.png')}
             resizeMode='contain'
-            style={{width: 30, marginBottom: -15}}
+            style={{width: 30, height: 30, marginRight: 10,}}
           />
-          <Text style={{fontSize: 16, textAlign: 'center'}}>Ingresar codigo manualmente</Text>
+          <Text style={{fontSize: 12, textAlign: 'center'}}>Ingresar codigo manualmente</Text>
 
         </View>
-
       </TouchableOpacity>
       <Modal
         animationType="fade"
@@ -42,7 +46,7 @@ export default function InsertManualCode({stopScan, scanProduct, loading}) {
               value={code}
               placeholder="Ingresar codigo del producto"
             />
-            <Button style={styles.button} title='Ingresar codigo' onPress={() => scanProduct(code)}/>
+            <Button style={styles.button} title='Ingresar codigo' onPress={() => handleCodeScan(code)}/>
             {
               loading &&
               <View style={styles.loader}>
@@ -69,14 +73,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     position: 'absolute',
     bottom: 50,
-    width: 150,
-    height: 100,
+    width: '90%',
     right: 20,
     borderRadius: 15,
   },
   box: {
+    flexDirection: 'row',
+    paddingVertical: 5,
     alignItems: 'center',
-    paddingBottom: 10
+    justifyContent: 'center',
   },
   centeredView: {
     flex: 1,

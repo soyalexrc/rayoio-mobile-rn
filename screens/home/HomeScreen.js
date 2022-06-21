@@ -3,8 +3,8 @@ import {useEffect, useState} from "react";
 
 {/*import HomeChart from "../components/HomeChart";*/
 }
-import {useSelector} from '../redux/store';
-import useGetOrders from "../hooks/useGetOrders";
+import {useSelector} from '../../redux/store';
+import useGetOrders from "../../hooks/useGetOrders";
 
 const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
 
@@ -64,13 +64,13 @@ export default function HomeScreen({navigation}) {
     <View style={styles.container}>
       <View style={styles.logoRow}>
         <Image
-          source={require('../assets/icons/rayo-logo.png')}
+          source={require('../../assets/icons/rayo-logo.png')}
           resizeMode='contain'
           style={{width: 120, marginTop: 15}}
         />
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('SearchItems')}>
           <Image
-            source={require('../assets/icons/search-icon.png')}
+            source={require('../../assets/icons/search-icon.png')}
             resizeMode='contain'
           />
         </TouchableOpacity>
@@ -78,28 +78,28 @@ export default function HomeScreen({navigation}) {
       <View style={styles.userInfoContainer}>
         <View style={styles.userInfo}>
           <Image
-            source={require('../assets/images/rayouser.png')}
+            source={require('../../assets/images/rayouser.png')}
             resizeMode='contain'
             style={{width: 40}}
           />
           <View style={{paddingLeft: 20, paddingRight: 20}}>
             <Text style={{
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: 'bold',
               letterSpacing: 1
             }}>Hola, {getNameFromEmail(loginData.data[0].email)}!</Text>
-            <Text style={{color: '#B0B3BA', fontSize: 18}}>Bienvenido de vuelta</Text>
+            <Text style={{color: '#B0B3BA', fontSize: 14}}>Bienvenido de vuelta</Text>
           </View>
           <TouchableOpacity>
             <Image
-              source={require('../assets/icons/menu-icon.png')}
+              source={require('../../assets/icons/menu-icon.png')}
               resizeMode='contain'
             />
           </TouchableOpacity>
         </View>
         <View>
           <Text style={{
-            fontSize: 22,
+            fontSize: 18,
             color: '#311DEF',
             letterSpacing: 2,
             fontWeight: 'bold'
@@ -117,8 +117,8 @@ export default function HomeScreen({navigation}) {
           opacity: 0.3,
           transform: [{scale: 0.80}],
         }}>
-          <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
-          <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+          <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
+          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
         </View>
         <View style={{
           ...styles.notifications,
@@ -130,8 +130,8 @@ export default function HomeScreen({navigation}) {
           opacity: 0.6,
           transform: [{scale: 0.90}],
         }}>
-          <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
-          <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+          <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
+          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
         </View>
         <Animated.View
           {...cardsPanResponder.panHandlers}
@@ -148,19 +148,19 @@ export default function HomeScreen({navigation}) {
               {scale: 1.0},
             ],
           }}>
-          <Text style={{color: '#fff', fontSize: 22}}>Hoy debemos recibir nueva carga</Text>
-          <Text style={{color: '#fff', fontSize: 18, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+          <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
+          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
         </Animated.View>
       </View>
       <View style={styles.payloadContainer}>
         <View style={styles.payload}>
           <View style={styles.payloadBox}>
             <Text style={{color: '#B0B3BA'}}>CARGA INGRESADA</Text>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>2 Bultos</Text>
+            <Text style={{fontSize: 14, fontWeight: 'bold'}}>2 Bultos</Text>
           </View>
           <View style={styles.payloadBox}>
             <Text style={{color: '#B0B3BA'}}>CARGA ENTREGADA</Text>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>0 Bultos</Text>
+            <Text style={{fontSize: 14, fontWeight: 'bold'}}>0 Bultos</Text>
           </View>
         </View>
       </View>

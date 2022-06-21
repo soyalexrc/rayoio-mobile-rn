@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import SelectClientScreen from '../screens/SelectClientScreen';
-import SelectSlotScreen from '../screens/SelectSlotScreen';
-import ScannerListScreen from "../screens/ScannerListScreen";
+import SelectClientScreen from '../screens/entry/SelectClientScreen';
+import SelectSlotScreen from '../screens/entry/SelectSlotScreen';
+import ScannerListScreen from "../screens/entry/ScannerListScreen";
 
 export default function RegisterNavigator() {
 

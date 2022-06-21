@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import HomeScreen from "../screens/HomeScreen";
-import SearchItemScreen from "../screens/SearchItemScreen";
+import HomeScreen from "../screens/home/HomeScreen";
+import SearchItemScreen from "../screens/home/SearchItemScreen";
 
 export default function HomeNavigation() {
 

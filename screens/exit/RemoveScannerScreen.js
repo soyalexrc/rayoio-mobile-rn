@@ -2,10 +2,11 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Text, View, StyleSheet, Animated, Image, TouchableOpacity} from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Audio} from 'expo-av';
-import useInsertProductInSlot from "../hooks/useInsertProductInSlot";
-import InsertManualCode from "../components/InsertManualCode";
-import {useSelector} from "../redux/store";
-import CustomSnackBar from "../components/CustomSnackBar";
+import useInsertProductInSlot from "../../hooks/useInsertProductInSlot";
+import InsertManualCode from "../../components/InsertManualCode";
+import {useSelector} from "../../redux/store";
+import CustomSnackBar from "../../components/CustomSnackBar";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 export default function RemoveScannerScreen({navigation, route}) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -26,7 +27,7 @@ export default function RemoveScannerScreen({navigation, route}) {
 
   async function playSound() {
     const {sound} = await Audio.Sound.createAsync(
-      require('../assets/codebar-sound.mp3')
+      require('../../assets/codebar-sound.mp3')
     );
     setSound(sound);
     await sound.playAsync();
@@ -146,6 +147,7 @@ export default function RemoveScannerScreen({navigation, route}) {
 
   return (
     <View style={styles.container}>
+      <HeaderNavigation navigation={navigation} title='some title' />
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
@@ -179,7 +181,7 @@ export default function RemoveScannerScreen({navigation, route}) {
                 onPress={() => setScanned(false)}
                 style={styles.rescanIconContainer}>
                 <Image
-                  source={require('../assets/images/rescan.png')}
+                  source={require('../../assets/images/rescan.png')}
                   style={{width: 50, height: 50}}
                 />
               </TouchableOpacity>

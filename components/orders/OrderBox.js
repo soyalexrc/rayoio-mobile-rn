@@ -10,17 +10,17 @@ export default function OrderBox(item, fn) {
           resizeMode='contain'
           source={{uri: item.item.urlImageClient}}
         />
-        <Text style={{ fontSize: 14, textAlign: 'center' }}>{item.item.nameClient}</Text>
+        <Text style={{ fontSize: 12, textAlign: 'center' }}>{item.item.nameClient}</Text>
       </View>
       <View style={{marginHorizontal: 20}}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{fontSize: 22, fontWeight: 'bold'}}>{item.item.ff_orderId}</Text>
-          <Text style={{fontSize: 16}}>Items {item.item.itemCount}</Text>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.item.ff_orderId}</Text>
+          <Text style={{fontSize: 12}}>Items {item.item.itemCount}</Text>
         </View>
-        <Text style={{fontSize: 16}}>{item.item.dateCreatedOrder}</Text>
-        <Text style={{fontSize: 16}}>{item.item.task.name}</Text>
-        <Text style={{fontSize: 16}}>{item.item.task.address.substring(0, 50).concat('...')}</Text>
-        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.item.task.state} - {item.item.task.country}</Text>
+        <Text style={{fontSize: 12}}>{item.item.dateCreatedOrder}</Text>
+        <Text style={{fontSize: 12}}>{item.item.task.name}</Text>
+        <Text style={{fontSize: 12}}>{item.item.task.address.substring(0, 30).concat('...')}</Text>
+        <Text style={{fontSize: 12, fontWeight: 'bold'}}>{item.item.task.state} - {item.item.task.country}</Text>
         <View style={styles.status}>
           <View
             style={{

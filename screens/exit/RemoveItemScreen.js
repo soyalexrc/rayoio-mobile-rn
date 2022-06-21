@@ -1,6 +1,6 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {useSelector} from "../redux/store";
-import HeaderNavigation from "../components/HeaderNavigation";
+import {useSelector} from "../../redux/store";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 export default function RemoveItemScreen({navigation}) {
   const selectedSlot = useSelector(state => state.slots.selectedSlot)
@@ -15,10 +15,10 @@ export default function RemoveItemScreen({navigation}) {
           onPress={() => navigation.navigate('RemoveScanner')}
 
         >
-          <Text style={{fontSize: 24, textAlign: 'center'}}>Remover del slot actual: </Text>
+          <Text style={{fontSize: 20, textAlign: 'center'}}>Remover del slot actual: </Text>
           {
             !selectedSlot.name &&
-            <Text style={{fontSize: 22, fontWeight: 'bold', textAlign: 'center', marginTop: 20, color: 'gray'}}>No hay
+            <Text style={{fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginTop: 20, color: 'gray'}}>No hay
               slot seleccionado...</Text>
           }
           {
@@ -30,9 +30,9 @@ export default function RemoveItemScreen({navigation}) {
                 source={{uri: selectedSlot.imageUrl}}
               />
               <View style={{marginHorizontal: 20}}>
-                <Text style={{fontSize: 22, fontWeight: 'bold'}}>{selectedSlot.name}</Text>
+                <Text style={{fontSize: 18, fontWeight: 'bold'}}>{selectedSlot.name}</Text>
                 {/*<Text style={{fontSize: 16}}>{selectedSlot.rut_customer}</Text>*/}
-                <Text style={{fontSize: 16}}>Items: {selectedSlot.amount}</Text>
+                <Text style={{fontSize: 12}}>Items: {selectedSlot.amount}</Text>
               </View>
             </View>
           }
@@ -41,7 +41,7 @@ export default function RemoveItemScreen({navigation}) {
           style={styles.button}
           onPress={() => navigation.navigate('SelectSlotRemove')}
         >
-          <Text style={{fontSize: 24, textAlign: 'center'}}>Remover de otro slot</Text>
+          <Text style={{fontSize: 20, textAlign: 'center'}}>Remover de otro slot</Text>
         </TouchableOpacity>
       </View>
     </View>

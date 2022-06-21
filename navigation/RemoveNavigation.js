@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import RemoveItemScreen from "../screens/RemoveItemScreen";
-import SelectSlotRemoveScreen from "../screens/SelectSlotRemoveScreen";
+import RemoveItemScreen from "../screens/exit/RemoveItemScreen";
+import SelectSlotRemoveScreen from "../screens/exit/SelectSlotRemoveScreen";
 
 export default function RemoveNavigation() {
 

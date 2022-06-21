@@ -11,10 +11,10 @@ export default function ClientBox(client, fn) {
         source={{uri: client.item.image_customer}}
       />
       <View style={{marginHorizontal: 20}}>
-        <Text style={{fontSize: 22, fontWeight: 'bold'}}>{client.item.name_customer}</Text>
-        <Text style={{fontSize: 18}}>{client.item.business_name_customer}</Text>
-        <Text style={{fontSize: 16}}>{client.item.rut_customer}</Text>
-        <Text style={{fontSize: 16}}>{client.item.mail_customer}</Text>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{client.item.name_customer}</Text>
+        <Text style={{fontSize: 14}}>{client.item.business_name_customer}</Text>
+        <Text style={{fontSize: 12}}>{client.item.rut_customer}</Text>
+        <Text style={{fontSize: 12}}>{client.item.mail_customer}</Text>
       </View>
     </TouchableOpacity>
   )

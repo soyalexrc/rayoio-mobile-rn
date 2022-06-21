@@ -22,7 +22,7 @@ export default function OrderItemSlotBox({element}) {
                 />
               )
           }
-          <Text style={{ fontSize: 24 }}>{element.item.itemName}</Text>
+          <Text style={{ fontSize: 20 }}>{element.item.itemName}</Text>
         </View>
       </View>
       {
@@ -34,10 +34,10 @@ export default function OrderItemSlotBox({element}) {
               source={{uri: slot.imageUrl}}
             />
             <View style={{marginHorizontal: 20}}>
-              <Text style={{fontSize: 22, fontWeight: 'bold'}}> {slot.nameSlot}</Text>
-              <Text style={{fontSize: 16}}>Cliente: {slot.nameClient}</Text>
-              <Text style={{fontSize: 16}}>Cantidad: {slot.amount}</Text>
-              <Text style={{fontSize: 16}}>Ultimo update: {slot.userMail}</Text>
+              <Text style={{fontSize: 18, fontWeight: 'bold'}}> {slot.nameSlot}</Text>
+              <Text style={{fontSize: 12}}>Cliente: {slot.nameClient}</Text>
+              <Text style={{fontSize: 12}}>Cantidad: {slot.amount}</Text>
+              <Text style={{fontSize: 12}}>Ultimo update: {slot.userMail}</Text>
             </View>
           </TouchableOpacity>
         ))

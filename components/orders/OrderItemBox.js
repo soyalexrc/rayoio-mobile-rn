@@ -23,10 +23,10 @@ export default function OrderItemBox({item, fn, index, length}) {
         }
       </View>
       <View style={{marginHorizontal: 20, width: '80%'}}>
-        <Text style={{fontSize: 22, fontWeight: 'bold'}}>{item.itemName}</Text>
-        <Text style={{fontSize: 16}}>Codigo: {item.code}</Text>
-        <Text style={{fontSize: 16}}>Cantidad: {item.amount}</Text>
-        <Text style={{fontSize: 16}}>Cantidad Recogida: {item.amountpicked}</Text>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.itemName}</Text>
+        <Text style={{fontSize: 12}}>Codigo: {item.code}</Text>
+        <Text style={{fontSize: 12}}>Cantidad: {item.amount}</Text>
+        <Text style={{fontSize: 12}}>Cantidad Recogida: {item.amountpicked}</Text>
         <View style={styles.status}>
           <View
             style={{

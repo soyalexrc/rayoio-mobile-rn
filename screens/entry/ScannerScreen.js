@@ -2,15 +2,15 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Text, View, StyleSheet, Animated, Image, TouchableOpacity} from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Audio} from 'expo-av';
-import useInsertProductInSlot from "../hooks/useInsertProductInSlot";
-import InsertManualCode from "../components/InsertManualCode";
-import {useSelector} from "../redux/store";
-import CustomSnackBar from "../components/CustomSnackBar";
+import useInsertProductInSlot from "../../hooks/useInsertProductInSlot";
+import InsertManualCode from "../../components/InsertManualCode";
+import {useSelector} from "../../redux/store";
+import CustomSnackBar from "../../components/CustomSnackBar";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 export default function ScannerScreen({navigation, route}) {
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-  const [lastCode, setLastCode] = useState('');
+  const [scanned, setScanned] = useState(true);
   const [sound, setSound] = useState(null);
   const {data, loading, addItem, error} = useInsertProductInSlot()
   const [animationLineHeight, setAnimationLineHeight] = useState(0)
@@ -26,12 +26,9 @@ export default function ScannerScreen({navigation, route}) {
   const selectedClient = useSelector(state => state.clients.selectedClient);
   const loginData = useSelector(state => state.login.loginData);
 
-  // console.log(selectedSlot)
-  // console.log(selectedClient);
-
   async function playSound() {
     const {sound} = await Audio.Sound.createAsync(
-      require('../assets/codebar-sound.mp3')
+      require('../../assets/codebar-sound.mp3')
     );
     setSound(sound);
     await sound.playAsync();
@@ -42,32 +39,26 @@ export default function ScannerScreen({navigation, route}) {
   }
 
   const handleBarCodeScanned = async ({data}) => {
-    if (lastCode !== data) {
-      setScanned(true);
-      await playSound()
-      await addItem({
-        code: data,
-        idClient: selectedClient._id,
-        idSlot: selectedSlot._id,
-        userMail: loginData.data[0].email,
-        amount: 1,
-      })
-      setLastCode(data);
-    }
+    setScanned(true);
+    await playSound()
+    await addItem({
+      code: data,
+      idClient: selectedClient._id,
+      idSlot: selectedSlot._id,
+      userMail: loginData.data[0].email,
+      amount: 1,
+    })
   };
 
   const scanProductManual = async (data) => {
-    if (lastCode !== data) {
-      await playSound()
-      await addItem({
-        code: data,
-        idClient: selectedClient._id,
-        idSlot: selectedSlot._id,
-        userMail: loginData.data[0].email,
-        amount: 1,
-      })
-      setLastCode(data);
-    }
+    await playSound()
+    await addItem({
+      code: data,
+      idClient: selectedClient._id,
+      idSlot: selectedSlot._id,
+      userMail: loginData.data[0].email,
+      amount: 1,
+    })
   }
 
   const animateLine = () => {
@@ -158,6 +149,7 @@ export default function ScannerScreen({navigation, route}) {
 
   return (
     <View style={styles.container}>
+      <HeaderNavigation navigation={navigation} title='some title' />
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
@@ -191,7 +183,7 @@ export default function ScannerScreen({navigation, route}) {
                 onPress={() => setScanned(false)}
                 style={styles.rescanIconContainer}>
                 <Image
-                  source={require('../assets/images/rescan.png')}
+                  source={require('../../assets/images/rescan.png')}
                   style={{width: 50, height: 50}}
                 />
               </TouchableOpacity>
@@ -201,14 +193,14 @@ export default function ScannerScreen({navigation, route}) {
         </View>
         <View style={styles.unfocusedContainer}></View>
       </View>
-      <TouchableOpacity style={styles.routerLink} onPress={() => navigation.navigate('ScannerList')}>
-        <Image
-          source={require('../assets/icons/home.png')}
-          resizeMode='contain'
-          style={{width: 30, marginBottom: -15}}
-        />
-        <Text style={{fontSize: 16, textAlign: 'center'}}>Listado de productos escaneados</Text>
-      </TouchableOpacity>
+      {/*<TouchableOpacity style={styles.routerLink} onPress={() => navigation.navigate('ScannerList')}>*/}
+      {/*  <Image*/}
+      {/*    source={require('../../assets/icons/home.png')}*/}
+      {/*    resizeMode='contain'*/}
+      {/*    style={{width: 30, marginBottom: -15}}*/}
+      {/*  />*/}
+      {/*  <Text style={{fontSize: 16, textAlign: 'center'}}>Listado de productos escaneados</Text>*/}
+      {/*</TouchableOpacity>*/}
       <InsertManualCode stopScan={stopScanner} scanProduct={scanProductManual} loading={loading} result={data}/>
       <Animated.View style={{
         opacity,

@@ -12,7 +12,7 @@ export default function HeaderNavigation({navigation, title}) {
         </TouchableOpacity>
       </View>
       <View style={{ flex: 0.9 }}>
-        <Text style={{textAlign: 'center', fontSize: 30}}>{title}</Text>
+        <Text style={{textAlign: 'center', fontSize: 26}}>{title}</Text>
       </View>
     </View>
   )
@@ -22,6 +22,7 @@ export default function HeaderNavigation({navigation, title}) {
 const styles = StyleSheet.create({
   header: {
     marginTop: 50,
+    zIndex: 99,
     flexDirection: 'row',
     marginHorizontal: 20,
     alignItems: 'center'

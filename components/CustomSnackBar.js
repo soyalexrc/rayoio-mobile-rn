@@ -1,4 +1,4 @@
-import {StyleSheet, Animated, Text, View, Button} from "react-native";
+import  {StyleSheet, Animated, Text, View, Button} from "react-native";
 import {useState, useRef, useEffect} from 'react';
 
 const getRandomMessage = () => {

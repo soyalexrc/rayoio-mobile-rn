@@ -1,9 +1,9 @@
 import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {getClients, selectClient} from '../redux/slices/clients';
-import {useDispatch, useSelector} from '../redux/store';
+import {getClients, selectClient} from '../../redux/slices/clients';
+import {useDispatch, useSelector} from '../../redux/store';
 import {useEffect} from 'react';
-import ClientBox from "../components/ClientBox";
-import HeaderNavigation from "../components/HeaderNavigation";
+import ClientBox from "../../components/ClientBox";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 
 export default function SelectClientScreen({navigation}) {

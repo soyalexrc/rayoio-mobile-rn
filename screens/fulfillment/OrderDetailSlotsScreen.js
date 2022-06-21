@@ -1,7 +1,7 @@
 import {StyleSheet, ScrollView, View, ActivityIndicator} from "react-native";
-import HeaderNavigation from "../components/HeaderNavigation";
-import useConsultSlots from "../hooks/useConsultSlots";
-import OrderItemSlotBox from "../components/orders/OrderItemSlotBox";
+import HeaderNavigation from "../../components/HeaderNavigation";
+import useConsultSlots from "../../hooks/useConsultSlots";
+import OrderItemSlotBox from "../../components/orders/OrderItemSlotBox";
 import {useEffect} from "react";
 
 export default function OrderDetailSlotsScreen({navigation, route}) {

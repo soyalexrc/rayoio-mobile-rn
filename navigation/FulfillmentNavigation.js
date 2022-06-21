@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import FulfillmentListScreen from "../screens/FulfillmentListScreen";
-import OrderDetailScreen from "../screens/OrderDetailScreen";
-import OrderDetailSlotsScreen from "../screens/OrderDetailSlotsScreen";
+import FulfillmentListScreen from "../screens/fulfillment/FulfillmentListScreen";
+import OrderDetailScreen from "../screens/fulfillment/OrderDetailScreen";
+import OrderDetailSlotsScreen from "../screens/fulfillment/OrderDetailSlotsScreen";
 
 export default function FulfillmentNavigation() {
 

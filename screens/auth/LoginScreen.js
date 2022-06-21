@@ -7,17 +7,18 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from "react-native";
 import {useState, useEffect} from "react";
-import {useDispatch, useSelector} from '../redux/store';
-import { loginWithEmail } from '../redux/slices/login';
+import {useDispatch, useSelector} from '../../redux/store';
+import { loginWithEmail } from '../../redux/slices/login';
 
 
 export default function LoginScreen({ navigation }) {
   const [error, setError] = useState(false);
   const [modalMessage, setModalMessage] = useState('')
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('alex@rayoapp.com');
   const dispatch = useDispatch();
   const { loginData, isLoading } = useSelector((state) => state.login)
 
@@ -39,38 +40,38 @@ export default function LoginScreen({ navigation }) {
     <View style={styles.container}>
       <View style={{ position: 'relative' }}>
         <Image
-          source={require('../assets/images/gradient-bakground.png')}
+          source={require('../../assets/images/gradient-bakground.png')}
           resizeMode='contain'
           style={{height: 300}}
         />
         <Image
-          source={require('../assets/icons/white-logo.png')}
+          source={require('../../assets/icons/white-logo.png')}
           resizeMode='contain'
-          style={{width: 230, position: 'absolute', top: 80, left: 300}}
+          style={{width: 200, position: 'absolute', top: 80, left: 315}}
         />
       </View>
       <View style={styles.box}>
-        <Text style={{ textAlign: 'center', fontSize: 22, fontWeight: 'bold' }}>Iniciar sesion</Text>
+        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>Iniciar sesion</Text>
         <View style={styles.googleButtonContainer}>
           <TouchableOpacity style={styles.googleButton}>
             <Image
-              source={require('../assets/icons/google-icon.png')}
+              source={require('../../assets/icons/google-icon.png')}
               resizeMode='contain'
               style={{ width: 40, height: 40 }}
             />
           </TouchableOpacity>
         </View>
-        <Text style={{ textAlign: 'center', fontSize: 18 }}>o tu cuenta Rayo</Text>
-        <View style={styles.inputBox}>
+        <Text style={{ textAlign: 'center', fontSize: 14 }}>o tu cuenta Rayo</Text>
+        <KeyboardAvoidingView behavior='padding' style={styles.inputBox}>
           <TextInput
             style={styles.input}
             value={email}
             onChangeText={setEmail}
             placeholder='mail@rayoapp.com'
           />
-        </View>
+        </KeyboardAvoidingView>
           <TouchableOpacity style={styles.loginButton} onPress={login}>
-            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 22 }}>Ingresar</Text>
+            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 18 }}>Ingresar</Text>
           </TouchableOpacity>
         {
           isLoading &&

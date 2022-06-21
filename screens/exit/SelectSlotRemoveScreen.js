@@ -1,11 +1,12 @@
 import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {getSlotsByWarehouse, selectSlot} from '../redux/slices/slots';
-import {useDispatch, useSelector} from '../redux/store';
+import {getSlotsByWarehouse, selectSlot} from '../../redux/slices/slots';
+import {useDispatch, useSelector} from '../../redux/store';
 import {useEffect} from 'react';
-import SlotBox from "../components/SlotBox";
-import HeaderNavigation from "../components/HeaderNavigation";
+import SlotBox from "../../components/SlotBox";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
-export default function SelectSlotScreen({navigation}) {
+
+export default function SelectSlotRemoveScreen({navigation}) {
   const dispatch = useDispatch();
   const {slots, isLoading} = useSelector(state => state.slots);
   const {loginData} = useSelector(state => state.login);
@@ -13,7 +14,7 @@ export default function SelectSlotScreen({navigation}) {
 
   const handleSelectSlot = (val) => {
     dispatch(selectSlot(val));
-    navigation.navigate('Scanner');
+    navigation.navigate('RemoveScanner');
   }
 
   useEffect(() => {
@@ -58,6 +59,21 @@ const styles = StyleSheet.create({
   slots: {
     marginTop: 20,
     height: 630
+  },
+  button: {
+    padding: 30,
+    marginHorizontal: 20,
+    backgroundColor: '#fff',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderRadius: 15,
+    marginVertical: 10
   },
 
 });

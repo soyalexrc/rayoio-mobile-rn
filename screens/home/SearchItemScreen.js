@@ -1,9 +1,9 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View, TextInput, ActivityIndicator, FlatList} from "react-native";
-import useGetInventory from "../hooks/useGetInventory";
+import useGetInventory from "../../hooks/useGetInventory";
 import { useState } from 'react';
-import {useSelector} from "../redux/store";
-import ItemBox from "../components/ItemBox";
-import HeaderNavigation from "../components/HeaderNavigation";
+import {useSelector} from "../../redux/store";
+import ItemBox from "../../components/ItemBox";
+import HeaderNavigation from "../../components/HeaderNavigation";
 
 export default function SearchItemScreen({navigation}) {
   const { data, error, getItemInventory, loading } = useGetInventory()
@@ -29,7 +29,7 @@ export default function SearchItemScreen({navigation}) {
         <View style={{flex: 0.13}}>
           <TouchableOpacity style={styles.backButton} onPress={() => getItemData()}>
             <Image
-              source={require('../assets/icons/search-icon.png')}
+              source={require('../../assets/icons/search-icon.png')}
             />
           </TouchableOpacity>
         </View>

@@ -1,5 +1,5 @@
 import {StyleSheet, Button, View, Text, useWindowDimensions} from "react-native";
-import CustomSnackBar from "../components/CustomSnackBar";
+import CustomSnackBar from "../../components/CustomSnackBar";
 // import Animated, { useAnimatedGestureHandler, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 // import { PanGestureHandler } from 'react-native-gesture-handler';
 // import CustomSnackBar from '../components/CustomSnackBar';
