@@ -1,56 +1,37 @@
-import {StyleSheet, Button, View, Text, useWindowDimensions} from "react-native";
-import CustomSnackBar from "../../components/CustomSnackBar";
-// import Animated, { useAnimatedGestureHandler, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-// import { PanGestureHandler } from 'react-native-gesture-handler';
-// import CustomSnackBar from '../components/CustomSnackBar';
+import { FlatList, StyleSheet, View, Text} from "react-native";
+import HeaderNavigation from "../../components/HeaderNavigation";
+import {useSelector} from "../../redux/store";
 
-const SPRING_CONFIG = {
-  damping: 80,
-  overshootClamping: true,
-  restDisplacementThreshold: 0.1,
-  restSpeedThreshold: 0.1,
-  stiffness: 500
+
+export default function ScannerListScreen({navigation}) {
+  const scannedItems = useSelector(state => state.scannedItems.items);
+  return (
+    <View style={styles.container}>
+      <HeaderNavigation navigation={navigation} title='Items escaneados' />
+      <View style={styles.list}>
+        {
+          scannedItems.length < 1 &&
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>No hay items escaneados</Text>
+          </View>
+        }
+        {
+          scannedItems.length > 0 &&
+          <FlatList
+            data={scannedItems}
+            renderItem={(item) => ScannedItemBox(item)}
+            keyExtractor={item => item._id}
+          />
+        }
+      </View>
+    </View>
+  )
 }
 
-export default function ScannerListScreen() {
-  // const dimensions = useWindowDimensions();
-  //
-  // const top = useSharedValue(dimensions.height)
-  //
-  // const gestureHandler = useAnimatedGestureHandler({});
-  //
-  // const style = useAnimatedStyle(() => {
-  //   return {
-  //     top: top.value
-  //   }
-  // })
-  //
-  // const handlePress = () => {
-  //   top.value = withSpring(
-  //     dimensions.height / 2, //half screen
-  //     SPRING_CONFIG
-  //   )
-  // }
-
+function ScannedItemBox(item) {
+  console.log(item)
   return (
-    <>
-    <View style={styles.container}>
-      <Button title='Open Sheet' onPress={() => {}}/>
-    </View>
-      <CustomSnackBar />
-      {/*<CustomSnackBar />*/}
-    {/*<PanGestureHandler*/}
-    {/*  onGestureEvent={gestureHandler}*/}
-    {/*>*/}
-    {/*  <Animated.View*/}
-    {/*  style={[*/}
-    {/*    styles.bottomSheet,*/}
-    {/*    style*/}
-    {/*  ]}>*/}
-    {/*  <Text>Sheet</Text>*/}
-    {/*  </Animated.View>*/}
-    {/*</PanGestureHandler>*/}
-    </>
+    <Text>hello world</Text>
   )
 }
 
@@ -59,28 +40,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  bottomSheet: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-
+  list: {
+    marginTop: 20,
+  },
 });

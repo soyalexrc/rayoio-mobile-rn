@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 }
 import {useSelector} from '../../redux/store';
 import useGetOrders from "../../hooks/useGetOrders";
+import * as SecureStore from "expo-secure-store";
 
 const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
 
@@ -13,9 +14,21 @@ export default function HomeScreen({navigation}) {
   const [cardsStackedAnim, setCardsStackedAnim] = useState(new Animated.Value(0));
   const [currentIndex, setCurrentIndex] = useState(0)
   const {loginData} = useSelector(state => state.login);
+  // const [userData, setUserData] = useState({});
   const {data, getOrders, loading} = useGetOrders()
+  //
+  // async function getLoginData() {
+  //   let result = await SecureStore.getItemAsync('storedLoginData');
+  //   if (!loginData) {
+  //     setUserData(JSON.parse(result))
+  //   } else {
+  //     setUserData(loginData);
+  //   }
+  // }
+
 
   useEffect(() => {
+    // getLoginData()
     return navigation.addListener('focus', (event) => {
       getOrders({
         userMail: loginData.data[0].email,

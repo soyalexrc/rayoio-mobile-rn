@@ -21,7 +21,7 @@ export default function InsertManualCode({stopScan, scanProduct, loading}) {
       <TouchableOpacity style={styles.container} onPress={handlePress}>
         <View style={styles.box}>
           <Image
-            source={require('../assets/icons/home.png')}
+            source={require('../assets/icons/edit-icon.png')}
             resizeMode='contain'
             style={{width: 30, height: 30, marginRight: 10,}}
           />

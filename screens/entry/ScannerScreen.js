@@ -193,14 +193,16 @@ export default function ScannerScreen({navigation, route}) {
         </View>
         <View style={styles.unfocusedContainer}></View>
       </View>
-      {/*<TouchableOpacity style={styles.routerLink} onPress={() => navigation.navigate('ScannerList')}>*/}
-      {/*  <Image*/}
-      {/*    source={require('../../assets/icons/home.png')}*/}
-      {/*    resizeMode='contain'*/}
-      {/*    style={{width: 30, marginBottom: -15}}*/}
-      {/*  />*/}
-      {/*  <Text style={{fontSize: 16, textAlign: 'center'}}>Listado de productos escaneados</Text>*/}
-      {/*</TouchableOpacity>*/}
+      <TouchableOpacity style={styles.routerLink} onPress={() => navigation.navigate('ScannerList')}>
+        <View style={styles.box}>
+          <Image
+            source={require('../../assets/icons/list-icon.png')}
+            resizeMode='contain'
+            style={{width: 30, height: 30, marginRight: 10}}
+          />
+          <Text style={{fontSize: 12, textAlign: 'center'}}>Listado de productos escaneados</Text>
+        </View>
+      </TouchableOpacity>
       <InsertManualCode stopScan={stopScanner} scanProduct={scanProductManual} loading={loading} result={data}/>
       <Animated.View style={{
         opacity,
@@ -270,15 +272,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   routerLink: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
     position: 'absolute',
-    bottom: 50,
+    bottom: 100,
     backgroundColor: '#fff',
-    paddingBottom: 10,
-    width: 150,
-    height: 100,
+    width: '90%',
     left: 20,
     borderRadius: 15,
-  }
+  },
+  box: {
+    flexDirection: 'row',
+    paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

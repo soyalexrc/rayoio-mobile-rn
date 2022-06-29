@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from "../../utils/axios";
+import * as SecureStore from 'expo-secure-store';
+
 
 // ----------------------------------------------------------------------
 
@@ -14,18 +16,15 @@ const slice = createSlice({
   name: "login",
   initialState,
   reducers: {
-    // START LOADING
     startLoading(state) {
       state.isLoading = true;
     },
 
-    // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
 
-    // GET QUESTIONS
     getLoginDataSuccess(state, action) {
       state.isLoading = false;
       state.loginData = action.payload;
@@ -33,7 +32,6 @@ const slice = createSlice({
   },
 });
 
-// Reducer
 export default slice.reducer;
 
 // ----------------------------------------------------------------------
@@ -43,9 +41,19 @@ export function loginWithEmail(loginData) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post("users/searchbyEmail", loginData);
-      dispatch(slice.actions.getLoginDataSuccess(response.data));
+      console.log('response', response.data);
+      console.log(response.data);
+      await dispatch(slice.actions.getLoginDataSuccess(response.data));
+      // await SecureStore.setItemAsync('storedLoginData', JSON.stringify(response.data))
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
+  };
+}
+
+export function setHardLoginData(loginData) {
+    console.log('inside hardLoginData ', loginData.data)
+  return (dispatch) => {
+      dispatch(slice.actions.getLoginDataSuccess(loginData.data))
   };
 }

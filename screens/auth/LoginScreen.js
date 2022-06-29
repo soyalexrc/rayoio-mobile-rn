@@ -10,35 +10,101 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView
 } from "react-native";
+import * as WebBrowser from 'expo-web-browser';
+import {ResponseType} from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
+import {initializeApp} from 'firebase/app';
+import {getAuth, GoogleAuthProvider, signInWithCredential} from 'firebase/auth';
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from '../../redux/store';
-import { loginWithEmail } from '../../redux/slices/login';
+import {loginWithEmail, setHardLoginData} from '../../redux/slices/login';
+import * as SecureStore from 'expo-secure-store';
 
+initializeApp({
+  apiKey: 'AIzaSyDwXSthANEToxTiuLAqTGxSdcbVklt8vZY',
+  authDomain: 'project-id.firebaseapp.com',
+  databaseURL: 'https://rayoio-6bf08.firebaseio.com',
+  projectId: 'rayoio-6bf08',
+  storageBucket: 'rayoio-6bf08.appspot.com',
+  // messagingSenderId: 'sender-id',
+  appId: '1:366605973053:android:49d903b1242e9ddd3fdc54',
+  // measurementId: 'G-measurement-id',
+})
 
-export default function LoginScreen({ navigation }) {
+WebBrowser.maybeCompleteAuthSession();
+
+export default function LoginScreen({navigation}) {
+  const [request, response, promptAsync] = Google.useAuthRequest({clientId: '366605973053-dpape509u53h0l7paiprgjh5cjmcllsd.apps.googleusercontent.com'});
   const [error, setError] = useState(false);
   const [modalMessage, setModalMessage] = useState('')
   const [email, setEmail] = useState('alex@rayoapp.com');
   const dispatch = useDispatch();
-  const { loginData, isLoading } = useSelector((state) => state.login)
+  // const [isLogged, setIsLogged] = useState(false)
+  const {loginData, isLoading} = useSelector((state) => state.login)
 
-  const login = async() => {
-    await dispatch(loginWithEmail({ email: email }))
+  const login = async (email) => {
+    await dispatch(loginWithEmail({email: email}))
   }
 
+
   useEffect(() => {
-    if (loginData.status !== 200 && loginData.message) {
+    if (loginData?.status !== 200 && loginData?.message) {
       setError(true)
       setModalMessage(loginData.message);
-    } else if (loginData.status === 200) {
+    } else if (loginData?.status === 200) {
       navigation.navigate('Root');
     }
   }, [loginData])
 
+  useEffect(() => {
+    googleSignIn()
+  }, [response]);
+
+  // useEffect(() => {
+  //   detectLoginData()
+  // }, [])
+
+  // async function detectLoginData() {
+  //   let result = await SecureStore.getItemAsync('storedLoginData');
+  //   dispatch(setHardLoginData(JSON.parse(result)));
+  //   console.log('loginData', loginData);
+  //   console.log('result', result)
+  //   if (result) navigation.navigate('Root')
+  // }
+
+  async function googleSignIn() {
+    if (response?.type === 'success') {
+      const {authentication: {accessToken}} = response;
+
+
+      const auth = getAuth();
+      const credential = GoogleAuthProvider.credential(accessToken);
+      const userInfo = await getUserInfo(accessToken);
+      await login(userInfo.email);
+      // console.log(userInfo);
+      await signInWithCredential(auth, credential);
+    }
+  }
+
+  async function getUserInfo(token) {
+    try {
+      const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      })
+      return await response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <View style={{ position: 'relative' }}>
+      <View style={{position: 'relative'}}>
         <Image
           source={require('../../assets/images/gradient-bakground.png')}
           resizeMode='contain'
@@ -51,17 +117,17 @@ export default function LoginScreen({ navigation }) {
         />
       </View>
       <View style={styles.box}>
-        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>Iniciar sesion</Text>
+        <Text style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold'}}>Iniciar sesion</Text>
         <View style={styles.googleButtonContainer}>
-          <TouchableOpacity style={styles.googleButton}>
+          <TouchableOpacity style={styles.googleButton} onPress={() => promptAsync()}>
             <Image
               source={require('../../assets/icons/google-icon.png')}
               resizeMode='contain'
-              style={{ width: 40, height: 40 }}
+              style={{width: 40, height: 40}}
             />
           </TouchableOpacity>
         </View>
-        <Text style={{ textAlign: 'center', fontSize: 14 }}>o tu cuenta Rayo</Text>
+        <Text style={{textAlign: 'center', fontSize: 14}}>o tu cuenta Rayo</Text>
         <KeyboardAvoidingView behavior='padding' style={styles.inputBox}>
           <TextInput
             style={styles.input}
@@ -70,13 +136,13 @@ export default function LoginScreen({ navigation }) {
             placeholder='mail@rayoapp.com'
           />
         </KeyboardAvoidingView>
-          <TouchableOpacity style={styles.loginButton} onPress={login}>
-            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 18 }}>Ingresar</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.loginButton} onPress={() => login(email)}>
+          <Text style={{textAlign: 'center', color: '#fff', fontSize: 18}}>Ingresar</Text>
+        </TouchableOpacity>
         {
           isLoading &&
           <View style={styles.loader}>
-            <ActivityIndicator size="large" color="#311DEF" />
+            <ActivityIndicator size="large" color="#311DEF"/>
           </View>
         }
       </View>
