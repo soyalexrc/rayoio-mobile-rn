@@ -16,7 +16,7 @@ export default function SearchItemScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <HeaderNavigation navigation={navigation} title='Buscar Item' />
+      {/*<HeaderNavigation navigation={navigation} title='Buscar Item' />*/}
       <View style={styles.searchBox}>
         <View style={{flex: 0.9}}>
           <TextInput
@@ -73,7 +73,7 @@ export default function SearchItemScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
   },
   list: {
     height: 530

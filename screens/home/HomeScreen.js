@@ -1,93 +1,57 @@
-import {StyleSheet, Image, View, Text, Animated, PanResponder, TouchableOpacity} from "react-native";
-import {useEffect, useState} from "react";
+import {StyleSheet, Image, View, Text, Animated, PanResponder, TouchableOpacity, ScrollView} from "react-native";
+import {useEffect, useState, useContext} from "react";
 
-{/*import HomeChart from "../components/HomeChart";*/
-}
+// import HomeChart from "../components/HomeChart";
+import { Dimensions } from 'react-native'
 import {useSelector} from '../../redux/store';
 import useGetOrders from "../../hooks/useGetOrders";
 import * as SecureStore from "expo-secure-store";
+import {AuthContext} from "../../context/auth/AuthContext";
+import { LineChart } from 'react-native-chart-kit';
+
 
 const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
+const screenWidth = Dimensions.get('window').width
+
+const chartConfig = {
+  backgroundGradientFrom: '#1E2923',
+  backgroundGradientTo: '#08130D',
+  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`
+}
+
+const chartData = {
+  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  datasets: [{
+    data: [ 20, 45, 28, 80, 99, 43 ]
+  }]
+}
+
 
 export default function HomeScreen({navigation}) {
-  const [cardsPan, setCardsPan] = useState(new Animated.ValueXY());
-  const [cardsStackedAnim, setCardsStackedAnim] = useState(new Animated.Value(0));
-  const [currentIndex, setCurrentIndex] = useState(0)
   const {loginData} = useSelector(state => state.login);
-  // const [userData, setUserData] = useState({});
+  const {authState} = useContext(AuthContext);
   const {data, getOrders, loading} = useGetOrders()
-  //
-  // async function getLoginData() {
-  //   let result = await SecureStore.getItemAsync('storedLoginData');
-  //   if (!loginData) {
-  //     setUserData(JSON.parse(result))
-  //   } else {
-  //     setUserData(loginData);
-  //   }
-  // }
 
 
   useEffect(() => {
     // getLoginData()
     return navigation.addListener('focus', (event) => {
       getOrders({
-        userMail: loginData.data[0].email,
-        idWarehouse: loginData.data[0].idWarehouse
+        // userMail: loginData.data[0].email,
+        userMail: authState.user.email,
+        // idWarehouse: loginData.data[0].idWarehouse
+        idWarehouse: authState.user.idWarehouse
       })
     });
   }, [navigation])
 
-  console.log(data);
-  const cardsPanResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onStartShouldSetPanResponderCapture: () => true,
-    onMoveShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponderCapture: () => true,
-    onPanResponderMove: (event, gestureState) => {
-      setCardsPan({x: gestureState.dx, y: cardsPan.y})
-    },
-    onPanResponderTerminationRequest: () => false,
-    onPanResponderRelease: (event, gestureState) => {
-    },
-  })
-
-  const onPanResponderRelease = (event, gestureState) => {
-    // bring the translationX back to 0
-    Animated.timing(cardsPan, {
-      toValue: 0,
-      duration: 300,
-    }).start();
-    // will be used to interpolate values in each view
-    Animated.timing(cardsStackedAnim, {
-      toValue: 1,
-      duration: 300,
-    }).start(() => {
-      // reset cardsStackedAnim's value to 0 when animation ends
-      setCardsStackedAnim(0);
-      // increment card position when animation ends
-      setCurrentIndex(prevState => prevState + 1)
-    });
-  };
 
   function getNameFromEmail(email) {
     return email.split('@')[0]
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoRow}>
-        <Image
-          source={require('../../assets/icons/rayo-logo.png')}
-          resizeMode='contain'
-          style={{width: 120, marginTop: 15}}
-        />
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('SearchItems')}>
-          <Image
-            source={require('../../assets/icons/search-icon.png')}
-            resizeMode='contain'
-          />
-        </TouchableOpacity>
-      </View>
+    <ScrollView style={styles.container}>
       <View style={styles.userInfoContainer}>
         <View style={styles.userInfo}>
           <Image
@@ -100,7 +64,7 @@ export default function HomeScreen({navigation}) {
               fontSize: 18,
               fontWeight: 'bold',
               letterSpacing: 1
-            }}>Hola, {getNameFromEmail(loginData.data[0].email)}!</Text>
+            }}>Hola, {getNameFromEmail(authState.user.email)}!</Text>
             <Text style={{color: '#B0B3BA', fontSize: 14}}>Bienvenido de vuelta</Text>
           </View>
           <TouchableOpacity>
@@ -116,54 +80,19 @@ export default function HomeScreen({navigation}) {
             color: '#311DEF',
             letterSpacing: 2,
             fontWeight: 'bold'
-          }}>{loginData.data[0].nameWarehouse}</Text>
+          }}>{authState.user.nameWarehouse}</Text>
         </View>
       </View>
       <View style={styles.notificationsContainer}>
-        <View style={{
-          ...styles.notifications,
-          // width: 300, height: 150,
-          position: 'absolute',
-          zIndex: 1,
-          bottom: 40,
-          backgroundColor: colors[2], // Red
-          opacity: 0.3,
-          transform: [{scale: 0.80}],
-        }}>
-          <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
-          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
-        </View>
-        <View style={{
-          ...styles.notifications,
-          // width: 300, height: 150,
-          position: 'absolute',
-          zIndex: 2,
-          bottom: 20,
-          backgroundColor: colors[1], // Green
-          opacity: 0.6,
-          transform: [{scale: 0.90}],
-        }}>
-          <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
-          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
-        </View>
-        <Animated.View
-          {...cardsPanResponder.panHandlers}
+        <View
           style={{
             ...styles.notifications,
             // width: 300, height: 150,
-            position: 'absolute',
-            zIndex: 3,
-            bottom: 0,
             backgroundColor: colors[0], // Blue
-            opacity: 1,
-            transform: [
-              {translateX: cardsPan.x},
-              {scale: 1.0},
-            ],
           }}>
           <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
           <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
-        </Animated.View>
+        </View>
       </View>
       <View style={styles.payloadContainer}>
         <View style={styles.payload}>
@@ -177,8 +106,15 @@ export default function HomeScreen({navigation}) {
           </View>
         </View>
       </View>
+      <LineChart
+        data={chartData}
+        width={screenWidth}
+        height={220}
+        chartConfig={chartConfig}
+      />
+      {/*<View style={{ height: 600, width: 200 }} />*/}
       {/*<HomeChart />*/}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -207,7 +143,7 @@ const styles = StyleSheet.create({
   },
   notificationsContainer: {
     position: 'relative',
-    marginTop: 180,
+    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -220,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 35
   },
   payloadContainer: {
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center'
   },
   payload: {
@@ -228,14 +164,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 40,
     paddingBottom: 40,
-    paddingLeft: 20,
-    paddingRight: 20,
   },
   payloadBox: {
     padding: 20,
     backgroundColor: '#fff',
-    marginLeft: 20,
-    marginRight: 20,
+    // marginLeft: 20,
+    // marginRight: 20,
+    marginHorizontal: 5,
     borderRadius: 15
   },
   chartContainer: {

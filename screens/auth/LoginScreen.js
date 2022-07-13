@@ -15,10 +15,11 @@ import {ResponseType} from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import {initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider, signInWithCredential} from 'firebase/auth';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import {useDispatch, useSelector} from '../../redux/store';
 import {loginWithEmail, setHardLoginData} from '../../redux/slices/login';
 import * as SecureStore from 'expo-secure-store';
+import {AuthContext} from '../../context/auth/AuthContext';
 
 initializeApp({
   apiKey: 'AIzaSyDwXSthANEToxTiuLAqTGxSdcbVklt8vZY',
@@ -34,43 +35,33 @@ initializeApp({
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({navigation}) {
+  const { signIn, loading, error } = useContext(AuthContext);
   const [request, response, promptAsync] = Google.useAuthRequest({clientId: '366605973053-dpape509u53h0l7paiprgjh5cjmcllsd.apps.googleusercontent.com'});
-  const [error, setError] = useState(false);
+  const [modal, setModal] = useState(error);
   const [modalMessage, setModalMessage] = useState('')
   const [email, setEmail] = useState('alex@rayoapp.com');
   const dispatch = useDispatch();
   // const [isLogged, setIsLogged] = useState(false)
-  const {loginData, isLoading} = useSelector((state) => state.login)
+  // const {loginData, isLoading} = useSelector((state) => state.login)
 
   const login = async (email) => {
-    await dispatch(loginWithEmail({email: email}))
+    await signIn(email);
+    // await dispatch(loginWithEmail({email: email}))
   }
 
 
-  useEffect(() => {
-    if (loginData?.status !== 200 && loginData?.message) {
-      setError(true)
-      setModalMessage(loginData.message);
-    } else if (loginData?.status === 200) {
-      navigation.navigate('Root');
-    }
-  }, [loginData])
+  // useEffect(() => {
+  //   if (loginData?.status !== 200 && loginData?.message) {
+  //     setModal(true)
+  //     setModalMessage(loginData.message);
+  //   } else if (loginData?.status === 200) {
+  //     navigation.navigate('Root');
+  //   }
+  // }, [loginData])
 
   useEffect(() => {
     googleSignIn()
   }, [response]);
-
-  // useEffect(() => {
-  //   detectLoginData()
-  // }, [])
-
-  // async function detectLoginData() {
-  //   let result = await SecureStore.getItemAsync('storedLoginData');
-  //   dispatch(setHardLoginData(JSON.parse(result)));
-  //   console.log('loginData', loginData);
-  //   console.log('result', result)
-  //   if (result) navigation.navigate('Root')
-  // }
 
   async function googleSignIn() {
     if (response?.type === 'success') {
@@ -137,27 +128,27 @@ export default function LoginScreen({navigation}) {
           />
         </KeyboardAvoidingView>
         <TouchableOpacity style={styles.loginButton} onPress={() => login(email)}>
-          <Text style={{textAlign: 'center', color: '#fff', fontSize: 18}}>Ingresar</Text>
+          {
+            loading ? (
+              <ActivityIndicator size="large" color="#FFF"/>
+            ) : (
+            <Text style={{textAlign: 'center', color: '#fff', fontSize: 18}}>Ingresar</Text>
+            )
+          }
         </TouchableOpacity>
-        {
-          isLoading &&
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color="#311DEF"/>
-          </View>
-        }
       </View>
       <Modal
         animationType="fade"
         transparent={true}
-        visible={error}
+        visible={modal}
         onRequestClose={() => {
-          setError(!error);
+          setModal(!modal);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{modalMessage}!</Text>
-            <Pressable style={{backgroundColor: '#311def', borderRadius: 10}} onPress={() => setError(!error)}>
+            <Pressable style={{backgroundColor: '#311def', borderRadius: 10}} onPress={() => setModal(!modal)}>
               <Text style={styles.loginText}>Cerrar</Text>
             </Pressable>
           </View>

@@ -31,9 +31,7 @@ const horizontalAnimation = {
 
 export default function Navigation() {
   return (
-    <NavigationContainer>
       <RootNavigator />
-    </NavigationContainer>
   );
 }
 
@@ -78,13 +76,13 @@ function BottomTabNavigator() {
         showLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 25,
-          left: 20,
-          right: 20,
+          bottom: 5,
+          left: 5,
+          right: 5,
           elevation: 0,
           backgroundColor: '#fff',
           borderRadius: 35,
-          height: 90,
+          height: 70,
           ...styles.shadow
         }
       }}
@@ -107,7 +105,7 @@ function BottomTabNavigator() {
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>HOME</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>.</Text>
             </View>
           ),
           // ...horizontalAnimation
@@ -131,7 +129,7 @@ function BottomTabNavigator() {
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>INGRESO</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>.</Text>
             </View>
           ),
         })}
@@ -154,7 +152,7 @@ function BottomTabNavigator() {
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>FULFILLMENT</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10  }}>.</Text>
             </View>
           ),
         })}
@@ -177,7 +175,7 @@ function BottomTabNavigator() {
                   tintColor: focused ? '#4354DD' : '#BCC3D0'
                 }}
               />
-              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10 }}>REMOVER</Text>
+              <Text style={{ color: focused ? '#4354DD' : '#BCC3D0', fontSize: 10 }}>.</Text>
             </View>
           ),
         })}
