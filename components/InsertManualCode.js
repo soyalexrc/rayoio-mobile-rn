@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View, Modal, Alert, TextInput, Button, ActivityIndicator} from "react-native";
 import {useState} from 'react';
 
-export default function InsertManualCode({stopScan, scanProduct, loading}) {
+export default function InsertManualCode({stopScan, scanProduct, loading = false}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [code, setCode] = useState('');
 

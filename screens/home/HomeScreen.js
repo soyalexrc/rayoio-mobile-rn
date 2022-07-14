@@ -7,25 +7,9 @@ import {useSelector} from '../../redux/store';
 import useGetOrders from "../../hooks/useGetOrders";
 import * as SecureStore from "expo-secure-store";
 import {AuthContext} from "../../context/auth/AuthContext";
-import { LineChart } from 'react-native-chart-kit';
 
 
 const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
-const screenWidth = Dimensions.get('window').width
-
-const chartConfig = {
-  backgroundGradientFrom: '#1E2923',
-  backgroundGradientTo: '#08130D',
-  color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`
-}
-
-const chartData = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-  datasets: [{
-    data: [ 20, 45, 28, 80, 99, 43 ]
-  }]
-}
-
 
 export default function HomeScreen({navigation}) {
   const {loginData} = useSelector(state => state.login);
@@ -106,14 +90,6 @@ export default function HomeScreen({navigation}) {
           </View>
         </View>
       </View>
-      <LineChart
-        data={chartData}
-        width={screenWidth}
-        height={220}
-        chartConfig={chartConfig}
-      />
-      {/*<View style={{ height: 600, width: 200 }} />*/}
-      {/*<HomeChart />*/}
     </ScrollView>
   )
 }

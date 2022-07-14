@@ -33,8 +33,8 @@ export const SlotsProvider = ({ children }) => {
     }
   };
 
-  const selectSlot = (client) => {
-    dispatch({ type: 'selectSlot', payload: client });
+  const selectSlot = (slot) => {
+    dispatch({ type: 'selectSlot', payload: slot });
   };
 
   const providerValue = {

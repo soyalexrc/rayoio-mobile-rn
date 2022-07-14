@@ -1,8 +1,8 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
-export default function SlotBox(slot, fn) {
+export default function SlotBox(slot, fn, selectedSlot) {
   return (
-    <TouchableOpacity style={styles.button}
+    <TouchableOpacity style={[styles.button, {backgroundColor: slot.item._id === selectedSlot._id ? '#E6E8F0' : '#fff'}]}
                       onPress={() => fn(slot.item)}
     >
       <Image
@@ -22,8 +22,9 @@ export default function SlotBox(slot, fn) {
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: 'row',
-    marginHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
     padding: 30,
     backgroundColor: '#fff',
     shadowColor: "#000",
