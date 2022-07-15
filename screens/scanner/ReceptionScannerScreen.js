@@ -7,7 +7,7 @@ import InsertManualCode from "../../components/InsertManualCode";
 import {useSelector} from "../../redux/store";
 import {ScannerContext} from "../../context/scanner/ScannerContext";
 
-export default function ScannerScreen({navigation, route}) {
+export default function ReceptionScannerScreen({navigation, route}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(true);
   const [sound, setSound] = useState(null);

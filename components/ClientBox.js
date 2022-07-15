@@ -1,8 +1,8 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
-export default function ClientBox(client, fn) {
+export default function ClientBox(client, fn, selectedClient) {
   return (
-    <TouchableOpacity style={styles.button}
+    <TouchableOpacity style={[styles.button, {backgroundColor: client.item._id === selectedClient._id ? '#E6E8F0' : '#fff'} ]}
                       onPress={() => fn(client.item)}
     >
       <Image
@@ -24,7 +24,7 @@ export default function ClientBox(client, fn) {
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
-    padding: 30,
+    padding: 20,
     marginHorizontal: 20,
     backgroundColor: '#fff',
     shadowColor: "#000",

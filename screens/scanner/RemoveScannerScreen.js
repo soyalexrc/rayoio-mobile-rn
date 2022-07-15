@@ -1,30 +1,28 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {Text, View, StyleSheet, Animated, Image, TouchableOpacity} from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Audio} from 'expo-av';
 import useInsertProductInSlot from "../../hooks/useInsertProductInSlot";
 import InsertManualCode from "../../components/InsertManualCode";
 import {useSelector} from "../../redux/store";
-import CustomSnackBar from "../../components/CustomSnackBar";
-import HeaderNavigation from "../../components/HeaderNavigation";
+import {ScannerContext} from "../../context/scanner/ScannerContext";
+import {AuthContext} from "../../context/auth/AuthContext";
+import {SlotsContext} from "../../context/slots/SlotsContext";
+import {ClientsContext} from "../../context/clients/ClientsContext";
 
-export default function ScannerScreen({navigation, route}) {
+export default function RemoveScannerScreen({navigation, route}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(true);
   const [sound, setSound] = useState(null);
-  const {data, loading, addItem, error} = useInsertProductInSlot()
   const [animationLineHeight, setAnimationLineHeight] = useState(0)
   const [focusLineAnimation, setFocusLineAnimation] = useState(new Animated.Value(0),)
-  const [snackbar, setSnackbar] = useState({
-    text: '',
-    color: '#fff',
-    icon: ''
-  })
   const opacity = useRef(new Animated.Value(0)).current;
+  const { snackbar, removeItemFromSlot } = useContext(ScannerContext);
+  const { authState } = useContext(AuthContext);
+  const { slots } = useContext(SlotsContext);
+  const { clients } = useContext(ClientsContext);
 
-  const selectedSlot = useSelector(state => state.slots.selectedSlot);
-  const selectedClient = useSelector(state => state.clients.selectedClient);
-  const loginData = useSelector(state => state.login.loginData);
+  // console.log(snackbar);
 
   async function playSound() {
     const {sound} = await Audio.Sound.createAsync(
@@ -39,27 +37,17 @@ export default function ScannerScreen({navigation, route}) {
   }
 
   const handleBarCodeScanned = async ({data}) => {
+    const dataToSend = {
+      code: data,
+      idClient: clients.selectedClient._id,
+      idSlot: slots.selectedSlot._id,
+      amount: 1,
+      userMail: authState.user.email
+    }
     setScanned(true);
     await playSound()
-    await addItem({
-      code: data,
-      idClient: selectedClient._id,
-      idSlot: selectedSlot._id,
-      userMail: loginData.data[0].email,
-      amount: 1,
-    })
+    await removeItemFromSlot(dataToSend);
   };
-
-  const scanProductManual = async (data) => {
-    await playSound()
-    await addItem({
-      code: data,
-      idClient: selectedClient._id,
-      idSlot: selectedSlot._id,
-      userMail: loginData.data[0].email,
-      amount: 1,
-    })
-  }
 
   const animateLine = () => {
     Animated.sequence([
@@ -78,52 +66,6 @@ export default function ScannerScreen({navigation, route}) {
 
   useEffect(() => {
     let isMounted = true;
-    if (snackbar.message) {
-      if (isMounted) {
-        Animated.sequence([
-          Animated.timing(opacity, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true
-          }),
-          Animated.delay(1500),
-          Animated.timing(opacity, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true
-          }),
-        ]).start(() => {
-          setSnackbar({
-            color: '#fff',
-            message: '',
-            icon: ''
-          });
-        })
-      }
-      return () => {
-        isMounted = false
-      }
-    }
-  }, [snackbar])
-
-  useEffect(() => {
-    let isMounted = true;
-    if (data.status) {
-      if (isMounted) {
-        setSnackbar({
-          message: data.message,
-          color: data.status === 201 ? 'green' : 'red',
-          icon: ''
-        })
-      }
-    }
-    return () => {
-      isMounted = false;
-    }
-  }, [data])
-
-  useEffect(() => {
-    let isMounted = true;
     if (isMounted) {
       animateLine()
     }
@@ -131,6 +73,30 @@ export default function ScannerScreen({navigation, route}) {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    let isMounted = true;
+    if (snackbar.open) {
+      if (isMounted) {
+        Animated.sequence([
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true
+          }),
+          // Animated.delay(1500),
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: true
+          }),
+        ]).start(() => {})
+      }
+      return () => {
+        isMounted = false
+      }
+    }
+  }, [snackbar])
 
   useEffect(() => {
     (async () => {
@@ -149,7 +115,6 @@ export default function ScannerScreen({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <HeaderNavigation navigation={navigation} title='some title' />
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
@@ -193,17 +158,7 @@ export default function ScannerScreen({navigation, route}) {
         </View>
         <View style={styles.unfocusedContainer}></View>
       </View>
-      <TouchableOpacity style={styles.routerLink} onPress={() => navigation.navigate('ScannerList')}>
-        <View style={styles.box}>
-          <Image
-            source={require('../../assets/icons/list-icon.png')}
-            resizeMode='contain'
-            style={{width: 30, height: 30, marginRight: 10}}
-          />
-          <Text style={{fontSize: 12, textAlign: 'center'}}>Listado de productos escaneados</Text>
-        </View>
-      </TouchableOpacity>
-      <InsertManualCode stopScan={stopScanner} scanProduct={scanProductManual} loading={loading} result={data}/>
+      <InsertManualCode stopScan={stopScanner} scanProduct={() => {}}  result={{}}/>
       <Animated.View style={{
         opacity,
         transform: [
@@ -218,7 +173,8 @@ export default function ScannerScreen({navigation, route}) {
         marginHorizontal: 20,
         marginVertical: 70,
         marginBottom: 5,
-        backgroundColor: snackbar.color,
+        backgroundColor: snackbar.type === 'success' ? 'green' : 'red',
+        display: snackbar.type ? 'flex' : 'none',
         padding: 20,
         borderRadius: 15,
         shadowColor: 'black',
@@ -230,7 +186,7 @@ export default function ScannerScreen({navigation, route}) {
         shadowRadius: 5,
         elevation: 6
       }}>
-        <Text style={{color: '#fff', fontSize: 18}}>{snackbar.message}</Text>
+        <Text style={{color: '#fff', fontSize: 18}}>{snackbar.text}</Text>
       </Animated.View>
     </View>
   );

@@ -1,7 +1,5 @@
 import {ActivityIndicator, FlatList, Image, StyleSheet, Alert, TextInput, TouchableOpacity, View} from "react-native";
-import {useState, useEffect} from "react";
-import useGetOrders from "../../hooks/useGetOrders";
-import {useSelector} from "../../redux/store";
+import {useState, useEffect, useContext} from "react";
 import OrderBox from "../../components/orders/OrderBox";
 import {useDispatch} from '../../redux/store';
 import {selectOrder} from '../../redux/slices/orders';
@@ -9,19 +7,25 @@ import HeaderNavigation from "../../components/HeaderNavigation";
 import orderStatus from "../../utils/orderStatus";
 import useVerifyProductExist from "../../hooks/useVerifyProductExist";
 import useChangeOrderStatus from "../../hooks/useChangeOrderStatus";
+import {AuthContext} from "../../context/auth/AuthContext";
+import {AsyncAlert} from "../../utils/asyncALert";
+import {FulfillmentContext} from "../../context/fulfillment/FulfillmentContext";
 
 export default function FulfillmentListScreen({navigation}) {
-  const {data, error, getOrders, loading} = useGetOrders()
+  // const {data, error, getOrders, loading} = useGetOrders()
   const [code, setCode] = useState('')
   const {handleChangeStatus} = useChangeOrderStatus(() => navigation.navigate('OrderDetail'))
-  const loginData = useSelector(state => state.login.loginData)
   const dispatch = useDispatch();
+  const { authState } = useContext(AuthContext);
+  const {  getOrders, loading, orders } = useContext(FulfillmentContext);
+
+  console.log(orders.orders[0]);
 
   useEffect(() => {
-    return navigation.addListener('focus', (event) => {
+    return navigation.addListener('focus', () => {
       getOrders({
-        userMail: loginData.data[0].email,
-        idWarehouse: loginData.data[0].idWarehouse
+        userMail: authState.user.email,
+        idWarehouse: authState.user.idWarehouse
       })
     });
   }, [navigation])
@@ -35,40 +39,14 @@ export default function FulfillmentListScreen({navigation}) {
           idStatus: orderStatus.picking
         })
       }
-      console.log(ask);
     } else {
       dispatch(selectOrder(item))
       navigation.navigate('OrderDetail')
     }
   }
 
-  const AsyncAlert = (title, msg) => new Promise((resolve) => {
-    Alert.alert(
-      title,
-      msg,
-      [
-        {
-          text: 'Comenzar picking',
-          onPress: () => {
-            resolve(true);
-          },
-        },
-        {
-          text: 'Cancelar',
-          onPress: () => {
-            resolve(false);
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  });
-
-
   return (
     <View style={styles.container}>
-      <HeaderNavigation navigation={navigation}
-                        title={`Ordenes de fulfillment (${data && data.length > 0 && data.length})`}/>
       <View style={styles.searchBox}>
         <View style={{flex: 0.9}}>
           <TextInput
@@ -79,8 +57,7 @@ export default function FulfillmentListScreen({navigation}) {
           />
         </View>
         <View style={{flex: 0.13}}>
-          <TouchableOpacity style={styles.backButton} onPress={() => {
-          }}>
+          <TouchableOpacity style={styles.backButton} onPress={() => {}}>
             <Image
               source={require('../../assets/icons/search-icon.png')}
             />
@@ -95,11 +72,11 @@ export default function FulfillmentListScreen({navigation}) {
           </View>
         }
         {
-          !loading && data && data.length > 0 &&
+          !loading && orders.orders && orders.orders.length > 0 &&
           <FlatList
-            data={data}
-            renderItem={(item) => OrderBox(item, handleSelectOrder)}
-            keyExtractor={item => item._id}
+            data={orders.orders}
+            renderItem={(order) => OrderBox(order, handleSelectOrder)}
+            keyExtractor={order => order._id}
           />
         }
       </View>
@@ -112,6 +89,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
   header: {
     marginTop: 50,

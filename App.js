@@ -7,8 +7,8 @@ import {AuthProvider} from "./context/auth/AuthContext";
 import {ClientsProvider} from "./context/clients/ClientsContext";
 import {SlotsProvider} from "./context/slots/SlotsContext";
 import {NavigationContainer} from "@react-navigation/native";
-import {StepperProvider} from "./context/stepper/StepperContext";
 import {ScannerProvider} from "./context/scanner/ScannerContext";
+import {FulfillmentProvider} from "./context/fulfillment/FulfillmentContext";
 
 export default function App() {
   return (
@@ -18,12 +18,12 @@ export default function App() {
           <AuthProvider>
             <ClientsProvider>
               <SlotsProvider>
-                <StepperProvider>
+                <FulfillmentProvider>
                   <ScannerProvider>
                     <RootNavigation/>
                     <StatusBar backgroundColor='#F7F7FA'/>
                   </ScannerProvider>
-                </StepperProvider>
+                </FulfillmentProvider>
               </SlotsProvider>
             </ClientsProvider>
           </AuthProvider>

@@ -1,54 +1,49 @@
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
-import {getSlotsByWarehouse} from '../../redux/slices/slots';
-import {useDispatch, useSelector} from '../../redux/store';
-import {useEffect, useContext} from 'react';
-import SlotBox from "../../components/SlotBox";
-import HeaderNavigation from "../../components/HeaderNavigation";
-import {AuthContext} from "../../context/auth/AuthContext";
-import {SlotsContext} from "../../context/slots/SlotsContext";
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
+import {useContext} from 'react';
 import {ScannerContext} from "../../context/scanner/ScannerContext";
-import ScannerItemBox from "../../components/ScannerItemBox";
+import RegularScannerItemBox from "../../components/RegularScannerItemBox";
+import {useEffect} from "react";
 
 const heightScreen = Dimensions.get('window').height;
 
-export default function ScannerListScreen({navigation}) {
-  const {items} = useContext(ScannerContext);
+export default function RegularScannerListScreen({navigation}) {
+  const {items, cleanList} = useContext(ScannerContext);
 
-
-  const handleSlotSelection = (val) => {
-    // console.log(val);
-  }
-
+  useEffect(() => {
+    cleanList();
+  }, [])
 
   function nextStep() {
-    // navigation.navigate('ScannerList')
+    // make something...
   }
 
   function prevStep() {
     navigation.goBack();
   }
 
-
   return (
     <View style={styles.container}>
       <View style={{padding: 20, alignItems: 'center'}}>
         <Text style={{color: '#455C7E', fontSize: 16, fontWeight: 'bold'}}>Scan</Text>
-        <Text>Listado de productos escaneados</Text>
+        <Text>Resumen de productos escaneados</Text>
       </View>
       <View style={styles.slots}>
-        {/*{*/}
-        {/*  loading &&*/}
-        {/*  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>*/}
-        {/*    <ActivityIndicator size='large' color='#311def'/>*/}
-        {/*  </View>*/}
-        {/*}*/}
+        {
+          items.recentScannedItems.length > 0 &&
           <FlatList
             data={items.recentScannedItems}
-            renderItem={(item) => ScannerItemBox(item, handleSlotSelection)}
+            renderItem={(item) => RegularScannerItemBox(item)}
             keyExtractor={item => item._id}
           />
-        <View>
-          <TouchableOpacity style={styles.rescan} onPress={() => {navigation.navigate('Scanner')}}>
+        }
+        {
+          items.recentScannedItems.length < 1 &&
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>No hay elementos escaneados...</Text>
+          </View>
+        }
+        <View >
+          <TouchableOpacity style={styles.rescan} onPress={() => {navigation.navigate('RegularScanner')}}>
             <Image
               source={require('../../assets/images/rescan.png')}
               style={{
@@ -57,17 +52,12 @@ export default function ScannerListScreen({navigation}) {
                 margin: 5,
               }}
             />
-            <Text>Continuar escaneando</Text>
+            <Text>{items.recentScannedItems.length > 0 ? 'Continuar escaneando' : 'Comenzar a escanear'} </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-            <Text style={{color: '#161070'}}>Volver</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={nextStep}
-            style={[styles.nextButton]}>
-            <Text style={{color: '#fff'}}>Guardar</Text>
+            <Text style={{color: '#161070', textAlign: 'center'}}>Volver</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -106,8 +96,7 @@ const styles = StyleSheet.create({
     color: '#161070'
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   rescan: {
     flexDirection: 'row',

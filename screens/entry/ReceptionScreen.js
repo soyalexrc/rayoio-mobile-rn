@@ -1,42 +1,70 @@
-import {View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Image, TextInput, ActivityIndicator, ScrollView} from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+  TextInput,
+  ActivityIndicator,
+  Keyboard
+} from 'react-native'
 import SelectDropdown from 'react-native-select-dropdown';
 import useGetClients from "../../hooks/useGetClients";
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { useState }from 'react';
+import {useState, useEffect} from 'react';
 
-export default function ReceptionScreen({ navigation }) {
+export default function ReceptionScreen({navigation}) {
   const {data, error, loading} = useGetClients()
   const [date, setDate] = useState('');
   const [client, setClient] = useState({});
   const [provider, setProvider] = useState({});
   const [payload, setPayload] = useState('');
   const [displayDatePicker, setDisplayDatePicker] = useState(false);
+  const [keyboardShow, setKeyboardShow] = useState(false);
+
 
   function handleChangeDate(event, date) {
     setDisplayDatePicker(false);
     setDate(new Date(date).toLocaleDateString('en-US').toString());
-    console.log('event', event);
-    console.log('date', date);
   }
+
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardShow(true);
+    });
+    const keyboardHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardShow(false);
+    });
+
+    return () => {
+      keyboardHideListener.remove();
+      keyboardShowListener.remove();
+    }
+  }, [])
 
   function handleValidation() {
     return !!(client && provider && payload && date);
   }
 
   function nextStep() {
-    navigation.navigate('SelectSlot')
+    navigation.navigate('SelectSlot', {
+      nextScreen: 'ScannerList'
+    })
   }
 
-  console.log(data.length)
+  function prevStep() {
+    navigation.goBack();
+  }
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 0.7, alignItems: 'center' }}>
-       <View style={{ padding: 20 }}>
-         <Text style={{ color: '#455C7E', fontSize: 16, fontWeight: 'bold' }}>Registrar nuevo producto</Text>
-       </View>
+      <View style={{flex: 0.7, alignItems: 'center'}}>
+        <View style={{padding: 20}}>
+          <Text style={{color: '#455C7E', fontSize: 16, fontWeight: 'bold'}}>Registrar nuevo producto</Text>
+        </View>
         <SafeAreaView>
-          {loading && <ActivityIndicator />}
+          {loading && <ActivityIndicator/>}
           {
             !loading && data && data.length > 0 &&
             <SelectDropdown
@@ -50,7 +78,7 @@ export default function ReceptionScreen({ navigation }) {
                 return (
                   <View style={styles.dropdown3BtnChildStyle}>
                     {selectedItem ? (
-                      <Image source={{ uri: selectedItem.image_customer }} style={styles.dropdown3BtnImage} />
+                      <Image source={{uri: selectedItem.image_customer}} style={styles.dropdown3BtnImage}/>
                     ) : (
                       <Image
                         source={require('../../assets/images/no-imagepng.png')}
@@ -60,7 +88,8 @@ export default function ReceptionScreen({ navigation }) {
                         }}
                       />
                     )}
-                    <Text style={styles.dropdown3BtnTxt}>{selectedItem ? selectedItem.name_customer : 'Selecciona proveedor'}</Text>
+                    <Text
+                      style={styles.dropdown3BtnTxt}>{selectedItem ? selectedItem.name_customer : 'Selecciona proveedor'}</Text>
                     {/*<FontAwesome name="chevron-down" color={'#444'} size={18} />*/}
                   </View>
                 );
@@ -71,7 +100,7 @@ export default function ReceptionScreen({ navigation }) {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdown3RowChildStyle}>
-                    <Image source={{ uri: item.image_customer }} style={styles.dropdownRowImage} />
+                    <Image source={{uri: item.image_customer}} style={styles.dropdownRowImage}/>
                     <Text style={styles.dropdown3RowTxt}>{item.name_customer}</Text>
                   </View>
                 );
@@ -90,7 +119,7 @@ export default function ReceptionScreen({ navigation }) {
           }
         </SafeAreaView>
         <SafeAreaView>
-          {loading && <ActivityIndicator />}
+          {loading && <ActivityIndicator/>}
           {
             !loading && data && data.length > 0 &&
             <SelectDropdown
@@ -104,7 +133,7 @@ export default function ReceptionScreen({ navigation }) {
                 return (
                   <View style={styles.dropdown3BtnChildStyle}>
                     {selectedItem ? (
-                      <Image source={{ uri: selectedItem.image_customer }} style={styles.dropdown3BtnImage} />
+                      <Image source={{uri: selectedItem.image_customer}} style={styles.dropdown3BtnImage}/>
                     ) : (
                       // <Ionicons name="md-earth-sharp" color={'#444'} size={32} />
                       <Image
@@ -115,7 +144,8 @@ export default function ReceptionScreen({ navigation }) {
                         }}
                       />
                     )}
-                    <Text style={styles.dropdown3BtnTxt}>{selectedItem ? selectedItem.name_customer : 'Selecciona cliente'}</Text>
+                    <Text
+                      style={styles.dropdown3BtnTxt}>{selectedItem ? selectedItem.name_customer : 'Selecciona cliente'}</Text>
                     {/*<FontAwesome name="chevron-down" color={'#444'} size={18} />*/}
                   </View>
                 );
@@ -126,7 +156,7 @@ export default function ReceptionScreen({ navigation }) {
               renderCustomizedRowChild={(item, index) => {
                 return (
                   <View style={styles.dropdown3RowChildStyle}>
-                    <Image source={{ uri: item.image_customer }} style={styles.dropdownRowImage} />
+                    <Image source={{uri: item.image_customer}} style={styles.dropdownRowImage}/>
                     <Text style={styles.dropdown3RowTxt}>{item.name_customer}</Text>
                   </View>
                 );
@@ -163,12 +193,13 @@ export default function ReceptionScreen({ navigation }) {
         </TouchableOpacity>
 
       </View>
-      <View style={styles.buttonContainer}>
-        {/*<TouchableOpacity style={styles.backButton} onPress={() => prevStep()}>*/}
-        {/*  <Text style={{ color: '#161070' }}>Volver</Text>*/}
-        {/*</TouchableOpacity>*/}
-        <TouchableOpacity  onPress={nextStep} style={[styles.nextButton, { backgroundColor: handleValidation() ? '#311DEF' : 'lightgray' }]}>
-          <Text style={{ color: '#fff' }}>Siguiente</Text>
+      <View style={[styles.buttonContainer, {display: keyboardShow ? 'none' : 'flex'}]}>
+        <TouchableOpacity style={styles.backButton} onPress={prevStep}>
+          <Text style={{color: '#161070', textAlign: 'center'}}>Volver</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={nextStep}
+                          style={[styles.nextButton, {backgroundColor: handleValidation() ? '#311DEF' : 'lightgray'}]}>
+          <Text style={{color: '#fff', textAlign: 'center'}}>Siguiente</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -193,6 +224,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   backButton: {
+    flex: 1,
     backgroundColor: '#EAE8FC',
     padding: 20,
     margin: 10,
@@ -201,7 +233,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     flex: 0.3,
   },
   radioContainer: {

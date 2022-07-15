@@ -1,6 +1,6 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, StyleSheet, Text, View} from "react-native";
 
-export default function ScannerItemBox(item, fn) {
+export default function RegularScannerItemBox(item) {
   return (
     <View style={styles.button}>
       <Image
@@ -9,20 +9,11 @@ export default function ScannerItemBox(item, fn) {
         // source={{uri: item.item.image_customer}}
         source={require('../assets/images/no-imagepng.png')}
       />
-      <View style={{marginHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flex: 1}}>
+      <View style={{marginHorizontal: 20}}>
         <View>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>{item.item.title}</Text>
           <Text style={{fontSize: 14}}>{item.item.units}</Text>
         </View>
-        <TouchableOpacity onPress={() => fn(item.item)}>
-          <Image
-            source={require('../assets/icons/delete-icon.png')}
-            style={{
-              width: 15,
-              height: 15
-            }}
-          />
-        </TouchableOpacity>
       </View>
     </View>
   )

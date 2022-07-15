@@ -1,29 +1,28 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {Text, View, StyleSheet, Animated, Image, TouchableOpacity} from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {Audio} from 'expo-av';
 import useInsertProductInSlot from "../../hooks/useInsertProductInSlot";
 import InsertManualCode from "../../components/InsertManualCode";
 import {useSelector} from "../../redux/store";
-import CustomSnackBar from "../../components/CustomSnackBar";
-import HeaderNavigation from "../../components/HeaderNavigation";
+import {ScannerContext} from "../../context/scanner/ScannerContext";
+import {AuthContext} from "../../context/auth/AuthContext";
+import {SlotsContext} from "../../context/slots/SlotsContext";
+import {ClientsContext} from "../../context/clients/ClientsContext";
 
-export default function RemoveScannerScreen({navigation, route}) {
+export default function RegularScannerScreen({navigation, route}) {
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
+  const [scanned, setScanned] = useState(true);
   const [sound, setSound] = useState(null);
-  const {data, loading, removeItem, error} = useInsertProductInSlot()
   const [animationLineHeight, setAnimationLineHeight] = useState(0)
   const [focusLineAnimation, setFocusLineAnimation] = useState(new Animated.Value(0),)
-  const [snackbar, setSnackbar] = useState({
-    text: '',
-    color: '#fff',
-    icon: ''
-  })
   const opacity = useRef(new Animated.Value(0)).current;
-  const selectedSlot = useSelector(state => state.slots.selectedSlot);
-  const selectedClient = useSelector(state => state.clients.selectedClient);
-  const loginData = useSelector(state => state.login.loginData);
+  const { snackbar, scanItemIntoSlot } = useContext(ScannerContext);
+  const { authState } = useContext(AuthContext);
+  const { slots } = useContext(SlotsContext);
+  const { clients } = useContext(ClientsContext);
+
+  // console.log(snackbar);
 
   async function playSound() {
     const {sound} = await Audio.Sound.createAsync(
@@ -38,27 +37,17 @@ export default function RemoveScannerScreen({navigation, route}) {
   }
 
   const handleBarCodeScanned = async ({data}) => {
+    const dataToSend = {
+      code: data,
+      idClient: clients.selectedClient._id,
+      idSlot: slots.selectedSlot._id,
+      amount: 1,
+      userMail: authState.user.email
+    }
     setScanned(true);
     await playSound()
-    await removeItem({
-      code: data,
-      idClient: selectedClient._id,
-      idSlot: selectedSlot._id,
-      userMail: loginData.data[0].email,
-      amount: 1,
-    })
+    await scanItemIntoSlot(dataToSend);
   };
-
-  const scanProductManual = async (data) => {
-    await playSound()
-    await removeItem({
-      code: data,
-      idClient: selectedClient._id,
-      idSlot: selectedSlot._id,
-      userMail: loginData.data[0].email,
-      amount: 1,
-    })
-  }
 
   const animateLine = () => {
     Animated.sequence([
@@ -75,43 +64,19 @@ export default function RemoveScannerScreen({navigation, route}) {
     ]).start(animateLine)
   }
 
-
-  useEffect(() => {
-    let isMounted = true;
-    if (data.status) {
-      if (isMounted) {
-        setSnackbar({
-          message: data.message,
-          color: data.status === 201 ? 'green' : 'red',
-          icon: ''
-        })
-      }
-    }
-    return () => {
-      isMounted = false
-    }
-  }, [data])
-
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
       animateLine()
     }
     return () => {
-      isMounted = false;
+      isMounted = false
     }
   }, [])
 
   useEffect(() => {
-    (async () => {
-      const {status} = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
-
-  useEffect(() => {
     let isMounted = true;
-    if (snackbar.message) {
+    if (snackbar.open) {
       if (isMounted) {
         Animated.sequence([
           Animated.timing(opacity, {
@@ -119,23 +84,26 @@ export default function RemoveScannerScreen({navigation, route}) {
             duration: 500,
             useNativeDriver: true
           }),
-          Animated.delay(1500),
+          // Animated.delay(1500),
           Animated.timing(opacity, {
             toValue: 0,
             duration: 500,
             useNativeDriver: true
           }),
-        ]).start(() => {
-          setSnackbar({
-            color: '#fff',
-            message: '',
-            icon: ''
-          });
-        })
+        ]).start(() => {})
+      }
+      return () => {
+        isMounted = false
       }
     }
-    isMounted = false;
   }, [snackbar])
+
+  useEffect(() => {
+    (async () => {
+      const {status} = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
 
 
   if (hasPermission === null) {
@@ -147,7 +115,6 @@ export default function RemoveScannerScreen({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <HeaderNavigation navigation={navigation} title='some title' />
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
@@ -191,7 +158,7 @@ export default function RemoveScannerScreen({navigation, route}) {
         </View>
         <View style={styles.unfocusedContainer}></View>
       </View>
-
+      <InsertManualCode stopScan={stopScanner} scanProduct={() => {}}  result={{}}/>
       <Animated.View style={{
         opacity,
         transform: [
@@ -206,7 +173,8 @@ export default function RemoveScannerScreen({navigation, route}) {
         marginHorizontal: 20,
         marginVertical: 70,
         marginBottom: 5,
-        backgroundColor: snackbar.color,
+        backgroundColor: snackbar.type === 'success' ? 'green' : 'red',
+        display: snackbar.type ? 'flex' : 'none',
         padding: 20,
         borderRadius: 15,
         shadowColor: 'black',
@@ -218,9 +186,8 @@ export default function RemoveScannerScreen({navigation, route}) {
         shadowRadius: 5,
         elevation: 6
       }}>
-        <Text style={{color: '#fff', fontSize: 18}}>{snackbar.message}</Text>
+        <Text style={{color: '#fff', fontSize: 18}}>{snackbar.text}</Text>
       </Animated.View>
-      <InsertManualCode  loading={loading} scanProduct={scanProductManual} stopScan={stopScanner} />
     </View>
   );
 }
@@ -261,15 +228,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   routerLink: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
     position: 'absolute',
-    bottom: 50,
+    bottom: 100,
     backgroundColor: '#fff',
-    paddingBottom: 10,
-    width: 150,
-    height: 100,
+    width: '90%',
     left: 20,
     borderRadius: 15,
-  }
+  },
+  box: {
+    flexDirection: 'row',
+    paddingVertical: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

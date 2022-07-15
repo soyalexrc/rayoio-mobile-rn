@@ -9,21 +9,15 @@ import {SlotsContext} from "../../context/slots/SlotsContext";
 
 const heightScreen = Dimensions.get('window').height;
 
-export default function SelectSlotScreen({navigation}) {
-  const dispatch = useDispatch();
-  // const {slots, isLoading} = useSelector(state => state.slots);
-  const {loginData} = useSelector(state => state.login);
+export default function SelectSlotScreen({navigation, route}) {
+  const { nextScreen, type } = route.params;
   const {authState} = useContext(AuthContext);
   const {selectSlot, slots, getSlots, loading} = useContext(SlotsContext);
 
 
   const handleSlotSelection = (val) => {
-    console.log(val);
     selectSlot(val);
-    // dispatch(selectSlot(val));
-    // navigation.navigate('Scanner');
   }
-  console.log('selectedSlot', slots.selectedSlot);
 
   useEffect(() => {
     return navigation.addListener('focus', () => {
@@ -35,7 +29,13 @@ export default function SelectSlotScreen({navigation}) {
   }, [navigation])
 
   function nextStep() {
-    navigation.navigate('ScannerList')
+    if (slots.selectedSlot._id) {
+      if (type === 'register') {
+        navigation.navigate(nextScreen);
+      } else {
+        navigation.navigate('RemoveScannerList');
+      }
+    }
   }
 
   function prevStep() {
@@ -45,8 +45,15 @@ export default function SelectSlotScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={{padding: 20, alignItems: 'center'}}>
-        <Text style={{color: '#455C7E', fontSize: 16, fontWeight: 'bold'}}>Registrar nuevo producto</Text>
+      <View style={{paddingTop: 20, alignItems: 'center'}}>
+        <Text style={{color: '#455C7E', fontSize: 16, fontWeight: 'bold'}}>
+          {
+            type === 'register'
+            ? 'Registrar nuevo producto'
+            : 'Remover Productos'
+          }
+        </Text>
+        <Text>Selecciona slot</Text>
       </View>
       <View style={styles.slots}>
         {
@@ -66,12 +73,12 @@ export default function SelectSlotScreen({navigation}) {
         }
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-            <Text style={{color: '#161070'}}>Volver</Text>
+            <Text style={{color: '#161070', textAlign: 'center'}}>Volver</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={nextStep}
             style={[styles.nextButton, { backgroundColor: slots.selectedSlot._id  ? '#311DEF' : 'lightgray' }]}>
-            <Text style={{color: '#fff'}}>Siguiente</Text>
+            <Text style={{color: '#fff', textAlign: 'center'}}>Siguiente</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   nextButton: {
-    // flex: 1,
+    flex: 1,
     alignItems: 'center',
     padding: 20,
     margin: 10,
@@ -104,6 +111,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   backButton: {
+    flex: 1,
     backgroundColor: '#EAE8FC',
     padding: 20,
     margin: 10,
@@ -112,7 +120,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    // flex: 0.3,
   },
 });

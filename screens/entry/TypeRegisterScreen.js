@@ -1,17 +1,18 @@
-import {Text, View, StyleSheet, TouchableOpacity, Pressable} from "react-native";
-import {StepperContext} from "../../context/stepper/StepperContext";
-import {useContext, useState} from "react";
+import {Text, View, StyleSheet, TouchableOpacity} from "react-native";
+import {useState} from "react";
 
-export default function TypeRegisterScreen({ navigation }) {
-  // const { nextStep } = useContext(StepperContext);
+export default function TypeRegisterScreen({ navigation, route }) {
   const [typeRegister, setTypeRegister] = useState('');
 
+  console.log('route', route);
+
   function initStepProcess() {
-    // nextStep();
-    if (typeRegister === 'regular') {
-      navigation.navigate('SelectClient');
-    } else {
-      navigation.navigate('Reception')
+    if (typeRegister !== '') {
+      if (typeRegister === 'regular') {
+        navigation.navigate('SelectClient');
+      } else {
+        navigation.navigate('Reception')
+      }
     }
   }
 
@@ -46,7 +47,7 @@ export default function TypeRegisterScreen({ navigation }) {
         {/*<TouchableOpacity style={styles.backButton} onPress={() => prevStep()}>*/}
         {/*  <Text style={{ color: '#161070' }}>Volver</Text>*/}
         {/*</TouchableOpacity>*/}
-        <TouchableOpacity style={styles.nextButton} onPress={initStepProcess}>
+        <TouchableOpacity style={[styles.nextButton, {     backgroundColor: typeRegister !== '' ?  '#311DEF' : 'lightgray'}]} onPress={initStepProcess}>
           <Text style={{ color: '#fff' }}>Siguiente</Text>
         </TouchableOpacity>
       </View>
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
     borderRadius: 35,
-    backgroundColor: '#311DEF',
+    // backgroundColor: '#311DEF',
     color: '#fff',
   },
   backButton: {

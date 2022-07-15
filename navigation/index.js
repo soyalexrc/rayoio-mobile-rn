@@ -3,7 +3,9 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import BottomTabNavigator from "./BottomTabNavigation";
 import HomeNavigation from "./HomeNavigation";
-import ScannerScreen from "../screens/scanner/ScannerScreen";
+import ReceptionScannerScreen from "../screens/scanner/ReceptionScannerScreen";
+import RegularScannerScreen from "../screens/scanner/RegularScannerScreen";
+import RemoveScannerScreen from "../screens/scanner/RemoveScannerScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,19 +18,17 @@ export default function RootNavigator() {
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
-          options={{
-            // headerShown: false
-          }}
-          name="Scanner"
-          component={ScannerScreen}
+          name="ReceptionScanner"
+          component={ReceptionScannerScreen}
         />
-        {/*<Stack.Screen*/}
-        {/*  options={{*/}
-        {/*    headerShown: false*/}
-        {/*  }}*/}
-        {/*  name="RemoveScanner"*/}
-        {/*  component={RemoveScannerScreen}*/}
-        {/*/>*/}
+        <Stack.Screen
+          name="RegularScanner"
+          component={RegularScannerScreen}
+        />
+        <Stack.Screen
+          name="RemoveScanner"
+          component={RemoveScannerScreen}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );

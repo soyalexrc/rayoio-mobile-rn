@@ -1,29 +1,19 @@
-import {StyleSheet, Image, View, Text, Animated, PanResponder, TouchableOpacity, ScrollView} from "react-native";
-import {useEffect, useState, useContext} from "react";
+import {StyleSheet, Image, View, Text, TouchableOpacity, ScrollView} from "react-native";
+import {useEffect, useContext} from "react";
 
-// import HomeChart from "../components/HomeChart";
-import { Dimensions } from 'react-native'
-import {useSelector} from '../../redux/store';
 import useGetOrders from "../../hooks/useGetOrders";
-import * as SecureStore from "expo-secure-store";
 import {AuthContext} from "../../context/auth/AuthContext";
 
 
-const colors = ['#311DEF', '#95A9F7', '#BDC9F9'];
-
 export default function HomeScreen({navigation}) {
-  const {loginData} = useSelector(state => state.login);
-  const {authState} = useContext(AuthContext);
+  const {authState, logout} = useContext(AuthContext);
   const {data, getOrders, loading} = useGetOrders()
 
 
   useEffect(() => {
-    // getLoginData()
     return navigation.addListener('focus', (event) => {
       getOrders({
-        // userMail: loginData.data[0].email,
         userMail: authState.user.email,
-        // idWarehouse: loginData.data[0].idWarehouse
         idWarehouse: authState.user.idWarehouse
       })
     });
@@ -51,9 +41,10 @@ export default function HomeScreen({navigation}) {
             }}>Hola, {getNameFromEmail(authState.user.email)}!</Text>
             <Text style={{color: '#B0B3BA', fontSize: 14}}>Bienvenido de vuelta</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={logout}>
             <Image
-              source={require('../../assets/icons/menu-icon.png')}
+              source={require('../../assets/icons/exit-icon.png')}
+              style={{ width: 25, height: 25 }}
               resizeMode='contain'
             />
           </TouchableOpacity>
@@ -69,13 +60,9 @@ export default function HomeScreen({navigation}) {
       </View>
       <View style={styles.notificationsContainer}>
         <View
-          style={{
-            ...styles.notifications,
-            // width: 300, height: 150,
-            backgroundColor: colors[0], // Blue
-          }}>
+          style={styles.notifications}>
           <Text style={{color: '#fff', fontSize: 18}}>Hoy debemos recibir nueva carga</Text>
-          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {data && data.length > 0 && data.length} paquetes</Text>
+          <Text style={{color: '#fff', fontSize: 14, marginTop: 15}}>Estan planificadas {loading && '...'} {!loading && data.length > 0 && data.length} paquetes</Text>
         </View>
       </View>
       <View style={styles.payloadContainer}>

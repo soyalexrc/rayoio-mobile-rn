@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
-    padding: 30,
+    padding: 20,
     backgroundColor: '#fff',
     shadowColor: "#000",
     shadowOffset: {

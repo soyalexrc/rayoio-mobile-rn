@@ -81,6 +81,7 @@ export default function BottomTabNavigator() {
         component={FulfillmentNavigation}
         options={({ navigation }) => ({
           title: '',
+          tabBarStyle: {display: 'none'},
           headerShown: false,
           tabBarIcon: ({focused}) => (
             <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
@@ -103,6 +104,7 @@ export default function BottomTabNavigator() {
         screenOptions={{headerShown:false }}
         component={RemoveNavigation}
         options={({ navigation }) => ({
+          tabBarStyle: {display: 'none'},
           title: '',
           headerShown: false,
           tabBarIcon: ({focused}) => (

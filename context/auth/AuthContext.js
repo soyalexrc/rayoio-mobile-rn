@@ -38,12 +38,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    dispatch({type: 'logout'})
+    navigation.navigate('Login');
+  }
+
+
   const providerValue = {
     authState,
     error,
     loading,
-    signIn: (email) => signIn(email),
-    logout: () => {},
+    signIn,
+    logout,
   };
 
   return (

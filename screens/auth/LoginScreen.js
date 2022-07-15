@@ -35,7 +35,7 @@ initializeApp({
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({navigation}) {
-  const { signIn, loading, error } = useContext(AuthContext);
+  const {signIn, loading, error, authState} = useContext(AuthContext);
   const [request, response, promptAsync] = Google.useAuthRequest({clientId: '366605973053-dpape509u53h0l7paiprgjh5cjmcllsd.apps.googleusercontent.com'});
   const [modal, setModal] = useState(error);
   const [modalMessage, setModalMessage] = useState('')
@@ -43,6 +43,14 @@ export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
   // const [isLogged, setIsLogged] = useState(false)
   // const {loginData, isLoading} = useSelector((state) => state.login)
+
+  useEffect(() => {
+    navigation.addListener('focus', (e) => {
+      console.log('authState', authState);
+      console.log('hello')
+      console.log(e);``
+    })
+  }, [navigation])
 
   const login = async (email) => {
     await signIn(email);
@@ -132,7 +140,7 @@ export default function LoginScreen({navigation}) {
             loading ? (
               <ActivityIndicator size="large" color="#FFF"/>
             ) : (
-            <Text style={{textAlign: 'center', color: '#fff', fontSize: 18}}>Ingresar</Text>
+              <Text style={{textAlign: 'center', color: '#fff', fontSize: 18}}>Ingresar</Text>
             )
           }
         </TouchableOpacity>

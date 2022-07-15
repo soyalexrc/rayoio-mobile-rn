@@ -1,6 +1,9 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import RemoveItemScreen from "../screens/exit/RemoveItemScreen";
-import SelectSlotRemoveScreen from "../screens/exit/SelectSlotRemoveScreen";
+import SelectClientScreen from "../screens/entry/SelectClientScreen";
+import SelectSlotScreen from "../screens/entry/SelectSlotScreen";
+import RegularScannerListScreen from "../screens/entry/RegularScannerListScreen";
+import CustomHeader from "../components/CustomHeader";
+import RemoveScannerListScreen from "../screens/entry/RemoveScannerListScreen";
 
 export default function RemoveNavigation() {
 
@@ -8,18 +11,29 @@ export default function RemoveNavigation() {
   return (
     <>
       <Stack.Navigator
-        initialRouteName="RemoveItems"
-        screenOptions={{
-          headerShown: false,
-        }}
+        initialRouteName="SelectClient"
       >
         <Stack.Screen
-          name="SelectSlotRemove"
-          component={SelectSlotRemoveScreen}
+          name="SelectClient"
+          initialParams={{type: 'remove'}}
+          component={SelectClientScreen}
+          options={{
+            header: (props) => <CustomHeader {...props} step={1} />
+          }}
         />
         <Stack.Screen
-          name="RemoveItems"
-          component={RemoveItemScreen}
+          name="SelectSlot"
+          component={SelectSlotScreen}
+          options={{
+            header: (props) => <CustomHeader {...props} step={2} />
+          }}
+        />
+        <Stack.Screen
+          name="RemoveScannerList"
+          component={RemoveScannerListScreen}
+          options={{
+            header: (props) => <CustomHeader {...props} step={3} />
+          }}
         />
 
       </Stack.Navigator>
